@@ -245,7 +245,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
             Handler mHand = new Handler();
 
-            stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, Publish.config.app, 1.0f)));
+            stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));
             stream.setLogLevel(R5Stream.LOG_LEVEL_DEBUG);
 
             stream.connection.addListener(new R5ConnectionListener() {
