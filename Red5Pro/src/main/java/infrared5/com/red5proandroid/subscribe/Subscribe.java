@@ -108,7 +108,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         v.setKeepScreenOn(true);
 
         //setup the stream with the user config settings
-        stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, streamParams.host, streamParams.port, streamParams.app,streamParams.app, 2.0f)));
+        stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, streamParams.host, streamParams.port, streamParams.app, 2.0f)));
 
         //set log level to be informative
         stream.setLogLevel(R5Stream.LOG_LEVEL_INFO);
