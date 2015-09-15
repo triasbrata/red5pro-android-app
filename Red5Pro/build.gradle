@@ -35,6 +35,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'lib', include: ['*.jar'])
+    compile project(':red5pro-secondscreen')
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {

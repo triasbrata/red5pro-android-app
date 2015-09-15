@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('red5pro-secondscreen.aar'))
