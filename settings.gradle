@@ -1,1 +1,1 @@
-include ':Red5Pro'
+include ':Red5Pro', ':red5pro-secondscreen'
