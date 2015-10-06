@@ -8,8 +8,8 @@ android {
         applicationId "infrared5.com.red5proandroid"
         minSdkVersion 15
         targetSdkVersion 20
-        versionCode 1060
-        versionName "1.0.6 SDK 0.8.36.0"
+        versionCode 1070
+        versionName "1.0.7 SDK 0.8.37.0"
     }
     buildTypes {
         release {
