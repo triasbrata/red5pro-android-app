@@ -9,7 +9,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 20
         versionCode 1070
-        versionName "1.0.7 SDK 0.8.37.0"
+        versionName "1.0.8 SDK 0.8.38.0"
     }
     buildTypes {
         release {
