@@ -274,7 +274,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                             break;
                         case START_STREAMING:
                             break;
-                        case STOP_STRAMING:
+                        case STOP_STREAMING:
                             break;
                         case CLOSE:
                             break;
