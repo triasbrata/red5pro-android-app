@@ -139,10 +139,6 @@ public class SettingsDialogFragment extends DialogFragment {
                 port.setText(""+preferences.getInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(getPreferenceValue(R.string.preference_default_port))));
                 app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_app)));
                 break;
-            case SECONDSCREEN:
-                port.setText(""+preferences.getInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(getPreferenceValue(R.string.preference_default_ss_port))));
-                app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_ss_app)));
-                break;
         }
     }
 
@@ -180,10 +176,6 @@ public class SettingsDialogFragment extends DialogFragment {
         switch (state) {
             case SUBSCRIBE:
                 publishSettings.setVisibility(View.GONE);
-                break;
-            case SECONDSCREEN:
-                publishSettings.setVisibility(View.GONE);
-                streamSettings.setVisibility(View.GONE);
                 break;
         }
 

@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 
 import infrared5.com.red5proandroid.help.HelpDialogFragment;
 import infrared5.com.red5proandroid.publish.Publish;
-import infrared5.com.red5proandroid.secondscreen.SecondScreenActivity;
 import infrared5.com.red5proandroid.subscribe.Subscribe;
 
 
@@ -19,11 +18,7 @@ public class Main extends Activity {
     DialogFragment helpDialog;
 
     private void resetButtonGraphics() {
-        ImageButton myButton = (ImageButton) findViewById(R.id.btnSecondScreen);
-        myButton.setImageResource(R.drawable.second);
-        myButton.invalidate();
-
-        myButton = (ImageButton) findViewById(R.id.btnSubscribe);
+        ImageButton myButton = (ImageButton) findViewById(R.id.btnSubscribe);
         myButton.setImageResource(R.drawable.subscribe);
         myButton.invalidate();
 
@@ -54,17 +49,6 @@ public class Main extends Activity {
 
     }
 
-    private void startSecondScreen() {
-
-        ImageButton myButton = (ImageButton) findViewById(R.id.btnSecondScreen);
-        if(myButton!=null) {
-            myButton.setImageResource(R.drawable.second_grey);
-            myButton.invalidate();
-        }
-        startActivity(new Intent(this, SecondScreenActivity.class));
-
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,14 +56,6 @@ public class Main extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(R.layout.activity_main);
-
-        final ImageButton button = (ImageButton) findViewById(R.id.btnSecondScreen);
-        button.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                startSecondScreen();
-            }
-        });
 
         final ImageButton pub = (ImageButton) findViewById(R.id.btnPublish);
         pub.setOnClickListener(new View.OnClickListener() {
