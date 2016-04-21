@@ -20,10 +20,9 @@
         <service
             android:name="com.infrared5.secondscreen.client.SecondScreenService"
             android:exported="false" />
-        <activity
-            android:name=".Main"
+        <activity android:name=".server.Server"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="Red5Pro"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
             <intent-filter>
@@ -32,15 +31,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".secondscreen.SecondScreenActivity"
+            android:name=".Main"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_second_screen"
-            android:parentActivityName=".Main"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="infrared5.com.red5proandroid.Main" />
+                android:value=".server.Server" />
         </activity>
         <activity
             android:name=".publish.Publish"
