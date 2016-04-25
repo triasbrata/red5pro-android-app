@@ -26,6 +26,9 @@
     <string name="preference_bitrate">settings.stream.bitrate</string>
     <string name="preference_audio">settings.stream.audio</string>
     <string name="preference_video">settings.stream.video</string>
+    <string name="preference_resolutionWidth">settings.stream.resolutionWidth</string>
+    <string name="preference_resolutionHeight">settings.stream.resolutionHeight</string>
+    <string name="preference_resolutionQuality">settings.stream.resolutionQuality</string>
 
     <string name="preference_default_host">0.0.0.0</string>
     <string name="preference_default_port">8554</string>
@@ -33,7 +36,10 @@
     <string name="preference_default_app">live</string>
     <string name="preference_default_ss_app">secondscreen</string>
     <string name="preference_default_name">myStream</string>
-    <string name="preference_default_bitrate">128</string>
+    <string name="preference_default_bitrate">1000</string>
+    <string name="preference_default_resolutionWidth">854</string>
+    <string name="preference_default_resolutionHeight">480</string>
+    <string name="preference_default_resolutionQuality">1</string>
 
     <string name="help_title">Thanks for downloading the Red5 Pro App!</string>
     <string name="help_message">Most likely you are a developer and know what you have downloaded. Here are a few things to know in case you are confused.</string>
