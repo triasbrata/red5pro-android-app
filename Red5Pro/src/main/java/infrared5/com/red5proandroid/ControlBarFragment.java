@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import infrared5.com.red5proandroid.publish.Publish;
-import infrared5.com.red5proandroid.secondscreen.SecondScreenActivity;
 import infrared5.com.red5proandroid.subscribe.Subscribe;
 
 public class ControlBarFragment extends Fragment {
@@ -48,18 +47,6 @@ public class ControlBarFragment extends Fragment {
                 public void onClick(View view) {
                     if(navigate(AppState.SUBSCRIBE)) {
                         mListener.onStateSelection(AppState.SUBSCRIBE);
-                    }
-                }
-            });
-        }
-
-        button = (ImageButton) v.findViewById(R.id.btnSecondScreen);
-        if(button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(navigate(AppState.SECONDSCREEN)) {
-                        mListener.onStateSelection(AppState.SECONDSCREEN);
                     }
                 }
             });
@@ -104,9 +91,6 @@ public class ControlBarFragment extends Fragment {
                 case SUBSCRIBE:
                     intent = new Intent(getActivity(), Subscribe.class);
                     break;
-                case SECONDSCREEN:
-                    intent = new Intent(getActivity(), SecondScreenActivity.class);
-                    break;
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
@@ -134,19 +118,11 @@ public class ControlBarFragment extends Fragment {
                 id = R.id.btnPublish;
                 drawable = R.drawable.publish_grey;
                 unselect(R.id.btnSubscribe, R.drawable.subscribe);
-                unselect(R.id.btnSecondScreen, R.drawable.second);
                 break;
             case SUBSCRIBE:
                 id = R.id.btnSubscribe;
                 drawable = R.drawable.subscribe_grey;
                 unselect(R.id.btnPublish, R.drawable.publish);
-                unselect(R.id.btnSecondScreen, R.drawable.second);
-                break;
-            case SECONDSCREEN:
-                id = R.id.btnSecondScreen;
-                drawable = R.drawable.second_grey;
-                unselect(R.id.btnPublish, R.drawable.publish);
-                unselect(R.id.btnSubscribe, R.drawable.subscribe);
                 break;
         }
 

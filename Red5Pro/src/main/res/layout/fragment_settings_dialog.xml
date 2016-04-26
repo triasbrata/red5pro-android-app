@@ -41,68 +41,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Server"
-                android:paddingLeft="10dp"
-                android:textColor="#ffffffff"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/settings_host"
-                android:singleLine="true"
-                android:textColor="#ffff0000"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_marginTop="100dp"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/border"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="Port"
-                android:paddingLeft="10dp"
-                android:textColor="#ffffffff" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:id="@+id/settings_port"
-                android:singleLine="true"
-                android:textColor="#ffff0000" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_marginTop="150dp"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/border"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="App Name"
                 android:paddingLeft="10dp"
                 android:layout_centerVertical="true"
@@ -121,7 +59,7 @@
 
         <RelativeLayout
             android:id="@+id/subscribe_settings"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="100dp"
             android:layout_width="300dp"
             android:layout_height="40dp"
             android:layout_alignParentTop="true"
@@ -152,7 +90,7 @@
 
         <RelativeLayout
             android:id="@+id/publishing_settings"
-            android:layout_marginTop="250dp"
+            android:layout_marginTop="150dp"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -161,41 +99,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
 
-            <RelativeLayout
-                android:layout_marginTop="0dp"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:background="@drawable/border"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Protocol"
-                    android:paddingLeft="10dp"
-                    android:layout_centerVertical="true"
-                    android:textColor="#ffffffff" />
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="RTSP"
-                    android:editable="false"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/settings_protocol"
-                    android:singleLine="true"
-                    android:textColor="#ffff0000" />
-
-            </RelativeLayout>
-
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
@@ -237,7 +143,7 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_alignParentTop="true"
@@ -268,7 +174,7 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="100dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_alignParentTop="true"

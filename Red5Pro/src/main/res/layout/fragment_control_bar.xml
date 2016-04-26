@@ -30,22 +30,12 @@
         android:background="@android:color/transparent" />
 
     <ImageButton
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:id="@+id/btnSecondScreen"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="165dp"
-        android:src="@drawable/second"
-        android:scaleType="centerInside"
-        android:background="#00000000" />
-
-    <ImageButton
         android:id="@+id/btnSettings"
         android:src="@drawable/settings_grey"
         android:contentDescription="Settings"
         android:background="@android:color/transparent"
         android:layout_marginTop="59dp"
-        android:layout_marginLeft="242dp"
+        android:layout_marginLeft="165dp"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:scaleType="fitCenter" />

@@ -96,13 +96,9 @@ public class SettingsDialogFragment extends DialogFragment {
         SharedPreferences preferences = getActivity().getPreferences(Context.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
 
-        EditText host = getField(v, R.id.settings_host);
-        EditText port = getField(v, R.id.settings_port);
         EditText app = getField(v, R.id.settings_appname);
         EditText name = getField(v, R.id.settings_streamname);
 
-        editor.putString(getPreferenceValue(R.string.preference_host), host.getText().toString());
-        editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(port.getText().toString()));
         editor.putString(getPreferenceValue(R.string.preference_app), app.getText().toString());
         editor.putString(getPreferenceValue(R.string.preference_name), name.getText().toString());
 
@@ -122,13 +118,10 @@ public class SettingsDialogFragment extends DialogFragment {
     private void showUserSettings(View v) {
         SharedPreferences preferences = getActivity().getPreferences(Context.MODE_MULTI_PROCESS);
 
-        EditText host = getField(v, R.id.settings_host);
-        EditText port = getField(v, R.id.settings_port);
         EditText app = getField(v, R.id.settings_appname);
         EditText name = getField(v, R.id.settings_streamname);
         EditText bitrate = getField(v, R.id.settings_bitrate);
 
-        host.setText(preferences.getString(getPreferenceValue(R.string.preference_host), getPreferenceValue(R.string.preference_default_host)));
         name.setText(preferences.getString(getPreferenceValue(R.string.preference_name), getPreferenceValue(R.string.preference_default_name)));
 
 
@@ -136,12 +129,7 @@ public class SettingsDialogFragment extends DialogFragment {
             case PUBLISH:
             case SUBSCRIBE:
                 bitrate.setText((""+preferences.getInt(getPreferenceValue(R.string.preference_bitrate), Integer.parseInt(getPreferenceValue(R.string.preference_default_bitrate)))));
-                port.setText(""+preferences.getInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(getPreferenceValue(R.string.preference_default_port))));
                 app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_app)));
-                break;
-            case SECONDSCREEN:
-                port.setText(""+preferences.getInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(getPreferenceValue(R.string.preference_default_ss_port))));
-                app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_ss_app)));
                 break;
         }
     }
@@ -180,10 +168,6 @@ public class SettingsDialogFragment extends DialogFragment {
         switch (state) {
             case SUBSCRIBE:
                 publishSettings.setVisibility(View.GONE);
-                break;
-            case SECONDSCREEN:
-                publishSettings.setVisibility(View.GONE);
-                streamSettings.setVisibility(View.GONE);
                 break;
         }
 
