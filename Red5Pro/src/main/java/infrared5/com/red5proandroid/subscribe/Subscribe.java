@@ -51,11 +51,15 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         return getResources().getString(id);
     }
 
+    public int getIntResource(int id) {
+        return getResources().getInteger(id);
+    }
+
     //setup configuration
     private void configure() {
-        SharedPreferences preferences = getPreferences(MODE_MULTI_PROCESS);
+        SharedPreferences preferences = getSharedPreferences(getStringResource(R.string.preference_file), MODE_MULTI_PROCESS);
         streamParams.host = preferences.getString(getStringResource(R.string.preference_host), getStringResource(R.string.preference_default_host));
-        streamParams.port = preferences.getInt(getStringResource(R.string.preference_port), Integer.parseInt(getStringResource(R.string.preference_default_port)));
+        streamParams.port = preferences.getInt(getStringResource(R.string.preference_port), getIntResource(R.integer.preference_default_port));
         streamParams.app = preferences.getString(getStringResource(R.string.preference_app), getStringResource(R.string.preference_default_app));
         streamParams.name = preferences.getString(getStringResource(R.string.preference_name), getStringResource(R.string.preference_default_name));
     }

@@ -59,11 +59,11 @@ public class Server extends Activity {
         serverText = (EditText) findViewById(R.id.serverTextField);
         portText = (EditText) findViewById(R.id.portTextField);
 
-        SharedPreferences preferences = getPreferences(Context.MODE_MULTI_PROCESS);
+        SharedPreferences preferences = getSharedPreferences(getPreferenceValue(R.string.preference_file), MODE_MULTI_PROCESS);
 
         String storedServer = preferences.getString(getPreferenceValue(R.string.preference_host), "0.0.0.0");
 
-        if (storedServer != "0.0.0.0") {
+        if (!storedServer.equals("0.0.0.0")) {
             serverText.setText(storedServer);
         }
 
@@ -84,13 +84,15 @@ public class Server extends Activity {
         final String port = portText.getText().toString().trim();
 
         if ((server.length() > 0 && !server.equals("0.0.0.0")) && port.length() > 0) {
-            SharedPreferences preferences = getPreferences(Context.MODE_MULTI_PROCESS);
+            SharedPreferences preferences = getSharedPreferences(getPreferenceValue(R.string.preference_file), MODE_MULTI_PROCESS);
             SharedPreferences.Editor editor = preferences.edit();
 
+            Log.d("ServerSettings", "Saving " + server + " as " + getPreferenceValue(R.string.preference_host));
             editor.putString(getPreferenceValue(R.string.preference_host), server);
-            editor.putString(getPreferenceValue(R.string.preference_port), port);
+            editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(port));
 
-            editor.commit();
+            editor.apply();
+
 
             startActivity(new Intent(this, Main.class));
         } else {

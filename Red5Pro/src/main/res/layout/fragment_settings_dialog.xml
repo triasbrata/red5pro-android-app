@@ -208,6 +208,46 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_marginTop="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight=".50"
+                    android:layout_marginRight="5dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border">
+
+                    <CheckBox
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/settings_adaptive_bitrate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:paddingLeft="10dp"
+                        android:textColor="#fff"
+                        android:checked="true"
+                        android:button="@drawable/check_visuals"
+                        android:text="Adaptive Bitrate" />
+
+                </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight=".50"
+                android:layout_marginLeft="5dp"
+                android:layout_height="match_parent">
+            </LinearLayout>
+
+            </LinearLayout>
+
         </RelativeLayout>
 
     </RelativeLayout>

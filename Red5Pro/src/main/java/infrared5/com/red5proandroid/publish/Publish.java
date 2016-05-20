@@ -25,6 +25,7 @@ import com.red5pro.streaming.R5StreamProtocol;
 import com.red5pro.streaming.config.R5Configuration;
 import com.red5pro.streaming.event.R5ConnectionEvent;
 import com.red5pro.streaming.event.R5ConnectionListener;
+import com.red5pro.streaming.source.R5AdaptiveBitrateController;
 import com.red5pro.streaming.source.R5Camera;
 import com.red5pro.streaming.source.R5Microphone;
 
@@ -75,20 +76,29 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         return getResources().getString(id);
     }
 
+    public int getIntResource(int id) {
+        return getResources().getInteger(id);
+    }
+
+    public Boolean getBooleanResource(int id) {
+        return getResources().getBoolean(id);
+    }
+
     public void onSettingsDialogClose() {
         configure();
     }
 
     //grab user data to be used in R5Configuration
     private void configure() {
-        SharedPreferences preferences = getPreferences(MODE_MULTI_PROCESS);
+        SharedPreferences preferences = getSharedPreferences(getStringResource(R.string.preference_file), MODE_MULTI_PROCESS);
         config.host = preferences.getString(getStringResource(R.string.preference_host), getStringResource(R.string.preference_default_host));
-        config.port = preferences.getInt(getStringResource(R.string.preference_port), Integer.parseInt(getStringResource(R.string.preference_default_port)));
+        config.port = preferences.getInt(getStringResource(R.string.preference_port), getIntResource(R.integer.preference_default_port));
         config.app = preferences.getString(getStringResource(R.string.preference_app), getStringResource(R.string.preference_default_app));
         config.name = preferences.getString(getStringResource(R.string.preference_name), getStringResource(R.string.preference_default_name));
         config.bitrate = preferences.getInt(getStringResource(R.string.preference_bitrate), Integer.parseInt(getStringResource(R.string.preference_default_bitrate)));
-        config.audio = preferences.getBoolean(getStringResource(R.string.preference_audio), true);
-        config.video = preferences.getBoolean(getStringResource(R.string.preference_video), true);
+        config.audio = preferences.getBoolean(getStringResource(R.string.preference_audio), getBooleanResource(R.bool.preference_default_audio));
+        config.video = preferences.getBoolean(getStringResource(R.string.preference_video), getBooleanResource(R.bool.preference_default_video));
+        config.adaptiveBitrate = preferences.getBoolean(getStringResource(R.string.preference_adaptive_bitrate), getBooleanResource(R.bool.preference_default_adaptive_bitrate));
     }
 
     @Override
@@ -245,7 +255,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
             Handler mHand = new Handler();
 
-            stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));
+            final R5Configuration configuration = new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 0.5f);
+            stream = new R5Stream(new R5Connection(configuration));
+
             stream.setLogLevel(R5Stream.LOG_LEVEL_DEBUG);
 
             stream.connection.addListener(new R5ConnectionListener() {
@@ -333,10 +345,18 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 stream.attachMic(r5Mic);
             }
 
+            if (config.adaptiveBitrate) {
+                final R5AdaptiveBitrateController adaptiveBitrateController = new R5AdaptiveBitrateController();
+                adaptiveBitrateController.AttachStream(stream);
 
-                    isPublishing = true;
-                    stream.publish(Publish.config.name, R5Stream.RecordType.Live);
-                    camera.startPreview();
+                if (config.video) {
+//                    adaptiveBitrateController.requiresVideo = true;
+                }
+            }
+
+            isPublishing = true;
+            stream.publish(Publish.config.name, R5Stream.RecordType.Live);
+            camera.startPreview();
 
         }
     }

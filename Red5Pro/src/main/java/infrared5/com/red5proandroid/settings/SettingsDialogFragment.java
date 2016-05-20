@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.R;
 import infrared5.com.red5proandroid.publish.Publish;
+import infrared5.com.red5proandroid.subscribe.Subscribe;
 
 public class SettingsDialogFragment extends DialogFragment {
 
@@ -88,7 +89,7 @@ public class SettingsDialogFragment extends DialogFragment {
     }
 
     private void saveSettings(View v) {
-        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_MULTI_PROCESS);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
 
         EditText app = getField(v, R.id.settings_appname);
@@ -100,6 +101,7 @@ public class SettingsDialogFragment extends DialogFragment {
         if(state == AppState.PUBLISH) {
             CheckBox cb = (CheckBox)v.findViewById(R.id.settings_audio);
             CheckBox cbv = (CheckBox)v.findViewById(R.id.settings_video);
+            CheckBox cba = (CheckBox)v.findViewById(R.id.settings_adaptive_bitrate);
 
             final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
             final int checkedID = group.getCheckedRadioButtonId();
@@ -148,13 +150,20 @@ public class SettingsDialogFragment extends DialogFragment {
 
             editor.putBoolean(getPreferenceValue(R.string.preference_audio), cb.isChecked());
             editor.putBoolean(getPreferenceValue(R.string.preference_video), cbv.isChecked());
+            editor.putBoolean(getPreferenceValue(R.string.preference_adaptive_bitrate), cba.isChecked());
         }
 
-        editor.commit();
+        editor.apply();
     }
 
     private void showUserSettings(View v) {
-        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_MULTI_PROCESS);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
+
+        String defaultHost = preferences.getString(getPreferenceValue(R.string.preference_default_host), null);
+        String host = preferences.getString(getPreferenceValue(R.string.preference_host), defaultHost);
+
+        Log.d("Settings", "Host will be " + host);
+        Publish.config.host = host;
 
         EditText app = getField(v, R.id.settings_appname);
         EditText name = getField(v, R.id.settings_streamname);
