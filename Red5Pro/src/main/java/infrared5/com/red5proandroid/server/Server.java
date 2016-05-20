@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -79,10 +80,10 @@ public class Server extends Activity {
     }
 
     private void onSubmit() {
-        final String server = serverText.getText().toString();
-        final String port = portText.getText().toString();
+        final String server = serverText.getText().toString().trim();
+        final String port = portText.getText().toString().trim();
 
-        if (server.length() > 0 && port.length() > 0) {
+        if ((server.length() > 0 && !server.equals("0.0.0.0")) && port.length() > 0) {
             SharedPreferences preferences = getPreferences(Context.MODE_MULTI_PROCESS);
             SharedPreferences.Editor editor = preferences.edit();
 
