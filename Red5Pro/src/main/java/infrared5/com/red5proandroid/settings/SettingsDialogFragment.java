@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import infrared5.com.red5proandroid.AppState;
@@ -28,10 +30,9 @@ public class SettingsDialogFragment extends DialogFragment {
 
     private AppState state;
     private OnFragmentInteractionListener mListener;
-    private Spinner resolutionPicker ;
     private ArrayAdapter adapter;
     public static int defaultResolution = 0;
-    public static int bitRate = 56;
+    public static int bitRate = 1000;
 
     public static SettingsDialogFragment newInstance(AppState state) {
         SettingsDialogFragment fragment = new SettingsDialogFragment();
@@ -70,13 +71,7 @@ public class SettingsDialogFragment extends DialogFragment {
 
         if(defaultResolution < 0) {
             defaultResolution=0;
-            Log.e("publisher","no currently supported resolution");
-        }
-
-        if(resolutionPicker!=null) {
-            resolutionPicker.setAdapter(adapter);
-            resolutionPicker.setSelection(defaultResolution);
-            resolutionPicker.setOnItemSelectedListener(getItemSelectedHandlerForResolution());
+            Log.e("publisher", "no currently supported resolution");
         }
     }
 
@@ -105,9 +100,52 @@ public class SettingsDialogFragment extends DialogFragment {
         if(state == AppState.PUBLISH) {
             CheckBox cb = (CheckBox)v.findViewById(R.id.settings_audio);
             CheckBox cbv = (CheckBox)v.findViewById(R.id.settings_video);
-            EditText br = getField(v, R.id.settings_bitrate);
-            bitRate = Integer.valueOf(br.getText().toString().trim());
+
+            final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
+            final int checkedID = group.getCheckedRadioButtonId();
+
+            int resolutionWidth = 854;
+            int resolutionHeight = 480;
+            int selectedQuality = 1;
+            bitRate = 1000;
+
+            switch (checkedID) {
+                case R.id.settings_quality_low:
+                    bitRate = 400;
+                    resolutionWidth = 426;
+                    resolutionHeight = 240;
+                    selectedQuality = 0;
+                    break;
+                case R.id.settings_quality_medium:
+                    break;
+                case R.id.settings_quality_high:
+                    bitRate = 4500;
+                    resolutionWidth = 1920;
+                    resolutionHeight = 1080;
+                    selectedQuality = 2;
+                    break;
+                default:
+                    break;
+            }
+
+            Log.d("SettingsDialogFragment", "Saving bitRate " + bitRate);
+            Log.d("SettingsDialogFragment", "Saving preference_resolutionWidth " + resolutionWidth);
+            Log.d("SettingsDialogFragment", "Saving preference_resolutionHeight " + resolutionHeight);
+            Log.d("SettingsDialogFragment", "Saving preference_resolutionQuality " + selectedQuality);
+
+            Publish.preferedResolution = selectedQuality;
+            Publish.selected_item = resolutionWidth + "x" + resolutionHeight;
+            Publish.config.bitrate = bitRate;
+
+            Log.d("SettingsDialogFragment", "Publish.preferedResolution " + selectedQuality);
+            Log.d("SettingsDialogFragment", "Publish.selected_item " + resolutionWidth + "x" + resolutionHeight);
+            Log.d("SettingsDialogFragment", "Publish.config.bitrate " + bitRate);
+
             editor.putInt(getPreferenceValue(R.string.preference_bitrate),bitRate);
+            editor.putInt(getPreferenceValue(R.string.preference_resolutionWidth), resolutionWidth);
+            editor.putInt(getPreferenceValue(R.string.preference_resolutionHeight), resolutionHeight);
+            editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), selectedQuality);
+
             editor.putBoolean(getPreferenceValue(R.string.preference_audio), cb.isChecked());
             editor.putBoolean(getPreferenceValue(R.string.preference_video), cbv.isChecked());
         }
@@ -120,15 +158,44 @@ public class SettingsDialogFragment extends DialogFragment {
 
         EditText app = getField(v, R.id.settings_appname);
         EditText name = getField(v, R.id.settings_streamname);
-        EditText bitrate = getField(v, R.id.settings_bitrate);
+
+        final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
+
+        int quality = preferences.getInt(getResources().getString(R.string.preference_resolutionQuality), 1);
+        Log.d("SettingsDialogFragment", "Got quality " + quality);
+
+        switch (quality) {
+            case 0:
+                ((RadioButton)group.findViewById(R.id.settings_quality_low)).setChecked(true);
+                Publish.preferedResolution = 0;
+                Publish.selected_item = "426x240";
+                Publish.config.bitrate = 400;
+                break;
+            case 1:
+                ((RadioButton)group.findViewById(R.id.settings_quality_medium)).setChecked(true);
+                Publish.preferedResolution = 1;
+                Publish.selected_item = "854x480";
+                Publish.config.bitrate = 1000;
+                break;
+            case 2:
+                ((RadioButton)group.findViewById(R.id.settings_quality_high)).setChecked(true);
+                Publish.preferedResolution = 2;
+                Publish.selected_item = "1920x1080";
+                Publish.config.bitrate = 4500;
+                break;
+            default:
+                ((RadioButton)group.findViewById(R.id.settings_quality_medium)).setChecked(true);
+                Publish.preferedResolution = 1;
+                Publish.selected_item = "854x480";
+                Publish.config.bitrate = 1000;
+                break;
+        }
 
         name.setText(preferences.getString(getPreferenceValue(R.string.preference_name), getPreferenceValue(R.string.preference_default_name)));
-
 
         switch (state) {
             case PUBLISH:
             case SUBSCRIBE:
-                bitrate.setText((""+preferences.getInt(getPreferenceValue(R.string.preference_bitrate), Integer.parseInt(getPreferenceValue(R.string.preference_default_bitrate)))));
                 app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_app)));
                 break;
         }
@@ -153,14 +220,6 @@ public class SettingsDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.fragment_settings_dialog, null, false);
-
-        resolutionPicker = (Spinner) v.findViewById(R.id.resolutionPicker);
-        if(adapter!=null) {
-            resolutionPicker.setAdapter(adapter);
-
-            resolutionPicker.setSelection(defaultResolution);
-            resolutionPicker.setOnItemSelectedListener(getItemSelectedHandlerForResolution());
-        }
 
         ViewGroup streamSettings = (ViewGroup) v.findViewById(R.id.subscribe_settings);
         ViewGroup publishSettings = (ViewGroup) v.findViewById(R.id.publishing_settings);

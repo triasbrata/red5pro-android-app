@@ -65,9 +65,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:background="@drawable/border"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/border">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,82 +99,63 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_marginTop="0dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".50"
-                    android:layout_marginRight="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bitrate"
-                        android:paddingLeft="10dp"
-                        android:layout_centerVertical="true"
-                        android:textColor="#ffffffff" />
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxWidth="200dp"
-                        android:id="@+id/settings_bitrate"
-                        android:text="128"
-                        android:layout_marginLeft="20dp"
-                        android:layout_centerVertical="true"
-                        android:singleLine="true"
-                        android:textColor="#ffff0000" />
-
-                </LinearLayout>
-
-
-
-            </LinearLayout>
-
             <RelativeLayout
-                android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/border"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true">
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/border">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Resolution"
+                    android:text="Quality"
+                    android:paddingStart="10dp"
                     android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:layout_centerVertical="true"
-                    android:textColor="#ffffffff" />
+                    android:textColor="#ffffffff"/>
 
-                <Spinner
-
-                    android:id="@+id/resolutionPicker"
+                <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:entries="@array/resolutions_array">
-                </Spinner>
+                    android:orientation="horizontal"
+                    android:id="@+id/settings_quality">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Low"
+                        android:textColor="#ffff0000"
+                        android:id="@+id/settings_quality_low"/>
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium"
+                        android:checked="true"
+                        android:textColor="#ffff0000"
+                        android:textColorHighlight="#ffff0000"
+                        android:id="@+id/settings_quality_medium" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="High"
+                        android:textColor="#ffff0000"
+                        android:id="@+id/settings_quality_high"/>
+
+                </RadioGroup>
 
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_alignParentTop="true"
