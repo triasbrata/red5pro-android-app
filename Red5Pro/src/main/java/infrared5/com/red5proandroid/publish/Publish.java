@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -40,6 +41,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
 
     private int cameraSelection = 0;
+    private int cameraOrientation = 0;
     private Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
     private List<Camera.Size> sizes = new ArrayList<Camera.Size>();
     public static Camera.Size selected_size = null;
@@ -111,6 +113,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         controlBar.displayPublishControls(true);
 
         //activate the camera
+        Camera.getCameraInfo(cameraSelection, cameraInfo);
+        setOrientationMod();
         showCamera();
 
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
@@ -207,14 +211,42 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             // can't find camera at that index, set default
             cameraSelection = Camera.CameraInfo.CAMERA_FACING_BACK;
         }
+        setOrientationMod();
+
         stopCamera();
         showCamera();
+    }
+
+    private void setOrientationMod(){
+
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_90:
+                if(cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
+                    degrees = 90;
+                else
+                    degrees = 270;
+                break;
+            case Surface.ROTATION_270:
+                if(cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
+                    degrees = 270;
+                else
+                    degrees = 90;
+                break;
+        }
+
+        degrees += cameraInfo.orientation;
+
+        cameraOrientation = degrees;
     }
 
     private void showCamera() {
         if(camera == null) {
             camera = Camera.open(cameraSelection);
-            camera.setDisplayOrientation(90);
+            camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
             sizes=camera.getParameters().getSupportedPreviewSizes();
             SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
             if(sufi.getHolder().isCreating()) {
@@ -242,6 +274,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     //called by record button
     private void startPublishing() {
         if(!isPublishing) {
+            if(stream != null){
+                stream.stop();
+            }
 
             Handler mHand = new Handler();
 
@@ -317,12 +352,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 r5Cam.setBitrate(config.bitrate);
             }
 
-            if(cameraSelection==1) {
-                r5Cam.setOrientation(270);
-            }
-            else {
-                r5Cam.setOrientation(90);
-            }
+            r5Cam.setOrientation(cameraOrientation);
             r5Mic = new R5Microphone();
 
             if(config.video) {
