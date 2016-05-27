@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -129,6 +130,7 @@
                         android:text="HIGH"
                         android:id="@+id/settings_quality_high"
                         style="@style/StandardText"
+                        android:checked="false"
                         android:button="@drawable/radiobutton" />
 
                 </RadioGroup>
@@ -149,12 +151,26 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:scaleType="fitStart"
                     android:layout_centerVertical="true"
                     android:background="@drawable/more" />
 
             </RelativeLayout>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PUBLISH"
+                style="@style/StandardButtonLink"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
