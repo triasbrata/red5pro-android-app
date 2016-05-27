@@ -28,7 +28,17 @@ public class ControlBarFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_control_bar, container, false);
 
-        ImageButton button = (ImageButton) v.findViewById(R.id.btnPublish);
+        ImageButton button = (ImageButton) v.findViewById(R.id.btnHome);
+        if (button != null) {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+
+        button = (ImageButton) v.findViewById(R.id.btnPublish);
         if (button != null) {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override

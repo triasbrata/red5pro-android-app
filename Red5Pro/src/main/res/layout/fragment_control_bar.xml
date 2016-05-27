@@ -9,10 +9,22 @@
     <ImageButton
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:id="@+id/btnHome"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/home"
+        android:layout_marginLeft="5dp"
+        android:scaleType="centerInside"
+        android:contentDescription="toHome"
+        android:clickable="false"
+        android:background="@android:color/transparent" />
+
+    <ImageButton
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:id="@+id/btnPublish"
         android:layout_marginTop="12dp"
         android:src="@drawable/publish"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="85dp"
         android:scaleType="centerInside"
         android:contentDescription="toPublish"
         android:clickable="false"
@@ -24,7 +36,7 @@
         android:id="@+id/btnSubscribe"
         android:layout_marginTop="12dp"
         android:src="@drawable/subscribe"
-        android:layout_marginLeft="85dp"
+        android:layout_marginLeft="165dp"
         android:scaleType="centerInside"
         android:clickable="false"
         android:background="@android:color/transparent" />
@@ -35,7 +47,7 @@
         android:contentDescription="Settings"
         android:background="@android:color/transparent"
         android:layout_marginTop="59dp"
-        android:layout_marginLeft="165dp"
+        android:layout_marginLeft="245dp"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:scaleType="fitCenter" />

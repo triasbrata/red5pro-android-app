@@ -33,4 +33,24 @@
         <item name="android:topDark">@drawable/alert_title</item>
     </style>
 
+    <style name="StandardView">
+        <item name="android:background">#ffc8c8c8</item>
+    </style>
+
+    <style name="StandardText">
+        <item name="android:textColor">#ff202020</item>
+    </style>
+
+    <style name="StandardButtonLink">
+        <item name="android:textColor">#ffe31900</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="StandardInput">
+        <item name="android:textColor">#ff484848</item>
+        <item name="android:background">#ffffffff</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
 </resources>

@@ -8,4 +8,5 @@ public class PublishStreamConfig {
     public int bitrate;
     public Boolean audio;
     public Boolean video;
+    public Boolean adaptiveBitrate;
 }
