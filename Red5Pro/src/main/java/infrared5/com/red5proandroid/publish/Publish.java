@@ -49,9 +49,10 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     public static String selected_item = null;
     public static int preferedResolution = 0;
     public static PublishStreamConfig config = null;
+    protected boolean override = false;
     private R5Camera r5Cam;
     private R5Microphone r5Mic;
-    private SurfaceView surfaceForCamera;
+    protected SurfaceView surfaceForCamera;
 
     static {
         if(config==null){
@@ -62,7 +63,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     protected Camera camera;
     protected boolean isPublishing = false;
 
-    R5Stream stream;
+    protected R5Stream stream;
 
     public final static String TAG = "Preview";
 
@@ -91,7 +92,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     //grab user data to be used in R5Configuration
-    private void configure() {
+    protected void configure() {
         SharedPreferences preferences = getSharedPreferences(getStringResource(R.string.preference_file), MODE_MULTI_PROCESS);
         config.host = preferences.getString(getStringResource(R.string.preference_host), getStringResource(R.string.preference_default_host));
         config.port = preferences.getInt(getStringResource(R.string.preference_port), getIntResource(R.integer.preference_default_port));
@@ -107,6 +108,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        if(override)
+            return;
 
         //assign the layout view
         setContentView(R.layout.activity_publish);
@@ -282,7 +286,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     //called by record button
-    private void startPublishing() {
+    protected void startPublishing() {
         if(!isPublishing) {
             if(stream != null){
                 stream.stop();
@@ -333,11 +337,21 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 }
             });
 
+            if(camera == null){
+                camera = Camera.open(cameraSelection);
+                Camera.getCameraInfo(cameraSelection, cameraInfo);
+                setOrientationMod();
+                camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
+                sizes=camera.getParameters().getSupportedPreviewSizes();
+            }
+
             camera.stopPreview();
 
-            //assign the surface to show the camera output
-            this.surfaceForCamera = (SurfaceView) findViewById(R.id.surfaceView);
-            stream.setView((SurfaceView) findViewById(R.id.surfaceView));
+            if(!override) {
+                //assign the surface to show the camera output
+                this.surfaceForCamera = (SurfaceView) findViewById(R.id.surfaceView);
+                stream.setView((SurfaceView) findViewById(R.id.surfaceView));
+            }
 
             //add the camera for streaming
             if(selected_item != null) {

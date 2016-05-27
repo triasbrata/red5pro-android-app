@@ -92,7 +92,7 @@
 
         <ImageButton
             android:id="@+id/btnTwoWay"
-            android:src="@drawable/subscribe"
+            android:src="@drawable/twoway"
             android:scaleType="centerInside"
             android:contentDescription="toTwoWay"
             android:background="@android:color/transparent"

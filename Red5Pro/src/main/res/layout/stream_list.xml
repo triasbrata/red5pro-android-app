@@ -1,0 +1,97 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="4"
+    android:background="#969696"
+    tools:context=".settings.SettingsDialogFragment"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></RelativeLayout>
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="STREAM NAME"
+            android:id="@+id/textView4"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/publishText"
+            android:layout_alignStart="@+id/publishText"
+            android:paddingTop="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/publishText"
+            android:background="#ffffff"
+            android:layout_below="@+id/textView4"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONNECT TO"
+            android:id="@+id/textView5"
+            android:layout_alignLeft="@+id/publishText"
+            android:layout_below="@+id/publishText"
+            android:paddingTop="10dp" />
+
+        <fragment
+            android:name="infrared5.com.red5proandroid.utilities.SubscribeList"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/streamList"
+            android:layout_alignLeft="@+id/textView5"
+            android:layout_below="@+id/textView5"
+            tools:layout="@android:layout/list_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 Streams"
+            android:id="@+id/StreamNum"
+            android:layout_alignLeft="@+id/streamList"
+            android:layout_below="@+id/streamList" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subscribe"
+            android:id="@+id/Subscribe"
+            android:textColor="#ffe30a00"
+            android:textStyle="bold"
+            android:layout_below="@+id/streamList"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:id="@+id/Back"
+            android:textColor="#ffe30a00"
+            android:layout_below="@+id/StreamNum"
+            android:layout_alignLeft="@+id/StreamNum"
+            android:layout_alignStart="@+id/StreamNum"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></RelativeLayout>
+</LinearLayout>

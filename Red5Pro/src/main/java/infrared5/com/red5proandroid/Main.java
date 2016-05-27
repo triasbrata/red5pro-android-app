@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import infrared5.com.red5proandroid.help.HelpDialogFragment;
 import infrared5.com.red5proandroid.publish.Publish;
 import infrared5.com.red5proandroid.subscribe.Subscribe;
+import infrared5.com.red5proandroid.twoway.TwoWay;
 
 
 public class Main extends Activity {
@@ -49,6 +50,15 @@ public class Main extends Activity {
 
     }
 
+    private void startTwoWay() {
+        ImageButton myButton = (ImageButton) findViewById(R.id.btnTwoWay);
+        if(myButton!=null) {
+            myButton.setImageResource(R.drawable.twoway);
+            myButton.invalidate();
+        }
+        startActivity(new Intent(this,TwoWay.class));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +80,14 @@ public class Main extends Activity {
 
             public void onClick(View v) {
                 startSubscribe();
+            }
+        });
+
+        final ImageButton twoway = (ImageButton) findViewById(R.id.btnTwoWay);
+        twoway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTwoWay();
             }
         });
 
