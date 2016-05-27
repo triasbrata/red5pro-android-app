@@ -36,6 +36,8 @@ android {
 dependencies {
     compile fileTree(dir: 'lib', include: ['*.jar'])
     compile project(':red5pro-secondscreen')
+
+//    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {

@@ -92,16 +92,16 @@ public class SettingsDialogFragment extends DialogFragment {
         SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
 
-        EditText app = getField(v, R.id.settings_appname);
+//        EditText app = getField(v, R.id.settings_appname);
         EditText name = getField(v, R.id.settings_streamname);
 
-        editor.putString(getPreferenceValue(R.string.preference_app), app.getText().toString());
+//        editor.putString(getPreferenceValue(R.string.preference_app), app.getText().toString());
         editor.putString(getPreferenceValue(R.string.preference_name), name.getText().toString());
 
         if(state == AppState.PUBLISH) {
-            CheckBox cb = (CheckBox)v.findViewById(R.id.settings_audio);
-            CheckBox cbv = (CheckBox)v.findViewById(R.id.settings_video);
-            CheckBox cba = (CheckBox)v.findViewById(R.id.settings_adaptive_bitrate);
+//            CheckBox cb = (CheckBox)v.findViewById(R.id.settings_audio);
+//            CheckBox cbv = (CheckBox)v.findViewById(R.id.settings_video);
+//            CheckBox cba = (CheckBox)v.findViewById(R.id.settings_adaptive_bitrate);
 
             final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
             final int checkedID = group.getCheckedRadioButtonId();
@@ -148,9 +148,9 @@ public class SettingsDialogFragment extends DialogFragment {
             editor.putInt(getPreferenceValue(R.string.preference_resolutionHeight), resolutionHeight);
             editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), selectedQuality);
 
-            editor.putBoolean(getPreferenceValue(R.string.preference_audio), cb.isChecked());
-            editor.putBoolean(getPreferenceValue(R.string.preference_video), cbv.isChecked());
-            editor.putBoolean(getPreferenceValue(R.string.preference_adaptive_bitrate), cba.isChecked());
+//            editor.putBoolean(getPreferenceValue(R.string.preference_audio), cb.isChecked());
+//            editor.putBoolean(getPreferenceValue(R.string.preference_video), cbv.isChecked());
+//            editor.putBoolean(getPreferenceValue(R.string.preference_adaptive_bitrate), cba.isChecked());
         }
 
         editor.apply();
@@ -165,7 +165,7 @@ public class SettingsDialogFragment extends DialogFragment {
         Log.d("Settings", "Host will be " + host);
         Publish.config.host = host;
 
-        EditText app = getField(v, R.id.settings_appname);
+//        EditText app = getField(v, R.id.settings_appname);
         EditText name = getField(v, R.id.settings_streamname);
 
         final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
@@ -205,7 +205,7 @@ public class SettingsDialogFragment extends DialogFragment {
         switch (state) {
             case PUBLISH:
             case SUBSCRIBE:
-                app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_app)));
+//                app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_app)));
                 break;
         }
     }

@@ -15,14 +15,13 @@
         android:allowBackup="true"
         android:icon="@drawable/red5pro"
         android:label="@string/app_name"
-
         android:theme="@style/AppTheme" >
-        <service
-            android:name="com.infrared5.secondscreen.client.SecondScreenService"
-            android:exported="false" />
+        <!--<service-->
+            <!--android:name="com.infrared5.secondscreen.client.SecondScreenService"-->
+            <!--android:exported="false" />-->
         <activity android:name=".server.Server"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="Red5Pro"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
             <intent-filter>
@@ -36,14 +35,76 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".server.Server" />
+        </activity>
+        <activity
+            android:name=".settings.Publish"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
+        </activity>
+        <activity
+            android:name=".settings.Subscribe"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
+        </activity>
+        <activity
+            android:name=".settings.PublishAdvanced"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
+        </activity>
+        <activity
+            android:name=".settings.SubscribeAdvanced"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
+        </activity>
+        <activity
+            android:name=".settings.TwoWayPublish"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
+        </activity>
+        <activity
+            android:name=".settings.TwoWaySubscribe"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.TwoWayPublish" />
         </activity>
         <activity
             android:name=".publish.Publish"
@@ -54,7 +115,7 @@
             android:theme="@style/NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="infrared5.com.red5proandroid.Main" />
+                android:value=".settings.Publish" />
         </activity>
         <activity
             android:name=".subscribe.Subscribe"
@@ -65,7 +126,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="infrared5.com.red5proandroid.Main" />
+                android:value=".settings.Subscribe" />
         </activity>
     </application>
 
