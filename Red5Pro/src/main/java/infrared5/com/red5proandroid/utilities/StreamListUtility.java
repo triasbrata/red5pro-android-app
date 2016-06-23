@@ -1,6 +1,7 @@
 package infrared5.com.red5proandroid.utilities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.apache.http.HttpResponse;
@@ -30,7 +31,8 @@ public class StreamListUtility extends Activity {
 
     private Thread callThread;
     private static StreamListUtility _instance;
-    public static StreamListUtility get_instance() {
+    public static StreamListUtility get_instance(){ return get_instance(null); }
+    public static StreamListUtility get_instance(Context ctx) {
 
         if (_instance == null) {
             _instance = new StreamListUtility();
@@ -38,15 +40,23 @@ public class StreamListUtility extends Activity {
                 _liveStreams = new ArrayList<String>();
             }
         }
+        if(ctx != null){
+            _instance.attachBaseContext(ctx);
+        }
         return _instance;
     }
+    static {
+        if(config==null){
+            config = new PublishStreamConfig();
+        }
+    }
 
-    protected String getStringResource(int id) {
+    public String getStringResource(int id) {
         return getResources().getString(id);
     }
 
     private void configure() {
-        SharedPreferences preferences = getPreferences(MODE_MULTI_PROCESS);
+        SharedPreferences preferences = getSharedPreferences(getStringResource(R.string.preference_file), MODE_MULTI_PROCESS);
         config.host = preferences.getString(getStringResource(R.string.preference_host), getStringResource(R.string.preference_default_host));
         config.app = preferences.getString(getStringResource(R.string.preference_app), getStringResource(R.string.preference_default_app));
         config.name = preferences.getString(getStringResource(R.string.preference_name), getStringResource(R.string.preference_default_name));

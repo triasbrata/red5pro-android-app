@@ -20,13 +20,14 @@ import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.ControlBarFragment;
 import infrared5.com.red5proandroid.R;
 import infrared5.com.red5proandroid.publish.Publish;
+import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 import infrared5.com.red5proandroid.utilities.StreamListUtility;
 import infrared5.com.red5proandroid.utilities.SubscribeList;
 
 /**
  * Created by davidHeimann on 5/26/16.
  */
-public class TwoWay extends Publish implements SubscribeList.Callbacks{
+public class TwoWay extends Publish implements SubscribeList.Callbacks, SettingsDialogFragment.OnFragmentInteractionListener{
 
     protected ViewFlipper flipper;
 
@@ -36,6 +37,8 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks{
         override = true;
 
         super.onCreate(savedInstanceState);
+
+        configure();
 
         flipper = new ViewFlipper(this);
         flipper.setAutoStart(false);
@@ -48,9 +51,24 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks{
         //two way
         flipper.addView(View.inflate(this, R.layout.activity_two_way, null));
 
-        //don't have a publish settings screen for now
+        //don't have a publish settings screen for now?
         //go straight to choosing the stream to subscribe to
+        //goToStreamList();
+    }
+
+    @Override
+    protected void openSettings() {
+        super.openSettings();
+
+        dialogFragment.onAttach(this);
+    }
+
+    @Override
+    public void onSettingsDialogClose() {
+        super.onSettingsDialogClose();
+
         goToStreamList();
+        dialogFragment.onDetach();
     }
 
     protected TextView streamNum;
@@ -85,7 +103,13 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks{
                 StreamListUtility.get_instance().clearAndDisconnect();
                 streamList.mCallbacks = null;
 
-//                Go back to the settings page. Either by flipping back, or going back to the previous activity
+                //Go back to the settings page. Either by flipping back, or going back to the previous activity
+                flipper.setDisplayedChild(0);
+                if(stream != null) {
+                    stream.stop();
+                    stream = null;
+                }
+                openSettings();
             }
         });
 
@@ -101,7 +125,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks{
             }
         });
 
-        StreamListUtility util = StreamListUtility.get_instance();
+        StreamListUtility util = StreamListUtility.get_instance(this);
         util.callWithRunnable(new Runnable() {
             @Override
             public void run() {
@@ -140,13 +164,19 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks{
     }
 
     protected void UpdateStreamList(){
-        if(!subName.isEmpty() && !StreamListUtility._liveStreams.contains(subName)){
-            subName = "";
-            subButton.setAlpha(0.5f);
-        }
-        streamNum.setText(StreamListUtility._liveStreams.size() + "Streams");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        streamList.connectList();
+                if(!subName.isEmpty() && !StreamListUtility._liveStreams.contains(subName)){
+                    subName = "";
+                    subButton.setAlpha(0.5f);
+                }
+                streamNum.setText(StreamListUtility._liveStreams.size() + "Streams");
+
+                streamList.connectList();
+            }
+        });
     }
 
     @Override

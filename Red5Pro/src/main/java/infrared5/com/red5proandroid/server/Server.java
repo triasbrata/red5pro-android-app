@@ -67,7 +67,7 @@ public class Server extends Activity {
             serverText.setText(storedServer);
         }
 
-        String storedPort = preferences.getString((getPreferenceValue(R.string.preference_port)), "8554");
+        String storedPort = preferences.getInt(getPreferenceValue(R.string.preference_port), 8554) + "";
         portText.setText(storedPort);
 
         errorText = (TextView) findViewById(R.id.serverErrorText);

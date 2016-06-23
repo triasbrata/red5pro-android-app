@@ -53,6 +53,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     private R5Camera r5Cam;
     private R5Microphone r5Mic;
     protected SurfaceView surfaceForCamera;
+    protected SettingsDialogFragment dialogFragment;
 
     static {
         if(config==null){
@@ -177,10 +178,10 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         return super.onOptionsItemSelected(item);
     }
 
-    private void openSettings(){
+    protected void openSettings(){
         try {
-            SettingsDialogFragment newFragment = SettingsDialogFragment.newInstance(AppState.PUBLISH);
-            newFragment.show(getFragmentManager().beginTransaction(), "settings_dialog");
+            dialogFragment = SettingsDialogFragment.newInstance(AppState.PUBLISH);
+            dialogFragment.show(getFragmentManager().beginTransaction(), "settings_dialog");
 
             List<String> sb = new ArrayList<String>();
             for(Camera.Size size:this.sizes){
@@ -206,7 +207,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 }
             };
 
-            newFragment.setSpinnerAdapter(adapter);
+            dialogFragment.setSpinnerAdapter(adapter);
 
         }
         catch(Exception e) {
