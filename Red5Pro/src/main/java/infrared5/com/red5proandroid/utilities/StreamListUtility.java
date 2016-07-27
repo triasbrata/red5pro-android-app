@@ -111,15 +111,17 @@ public class StreamListUtility extends Activity {
                         _liveStreams.clear();
                         for (int i = 0; i < list.length(); i++){
                             JSONObject obj = list.getJSONObject(i);
-                            if(obj.getString("name").equals(config.name))
-                            _liveStreams.add(obj.getString("name"));
+                            if(!obj.getString("name").equals(config.name))
+                                _liveStreams.add(obj.getString("name"));
                         }
                     }
 
                     if(finishCall != null)
                         finishCall.run();
 
-                    Thread.sleep((long) (_loopDelay * 1000));
+                    if(!Thread.interrupted())
+                        Thread.sleep((long) (_loopDelay * 1000));
+
                     if(!Thread.interrupted())
                         makeCall();
 

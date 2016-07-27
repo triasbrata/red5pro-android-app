@@ -41,17 +41,17 @@ import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 public class Publish extends Activity implements SurfaceHolder.Callback, View.OnClickListener,
         ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
 
-    private int cameraSelection = 0;
-    private int cameraOrientation = 0;
-    private Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-    private List<Camera.Size> sizes = new ArrayList<Camera.Size>();
+    protected int cameraSelection = 0;
+    protected int cameraOrientation = 0;
+    protected Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+    protected List<Camera.Size> sizes = new ArrayList<Camera.Size>();
     public static Camera.Size selected_size = null;
     public static String selected_item = null;
     public static int preferedResolution = 0;
     public static PublishStreamConfig config = null;
     protected boolean override = false;
-    private R5Camera r5Cam;
-    private R5Microphone r5Mic;
+    protected R5Camera r5Cam;
+    protected R5Microphone r5Mic;
     protected SurfaceView surfaceForCamera;
     protected SettingsDialogFragment dialogFragment;
 
@@ -232,7 +232,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         showCamera();
     }
 
-    private void setOrientationMod(){
+    protected void setOrientationMod(){
 
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
         int degrees = 0;
@@ -258,12 +258,18 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         cameraOrientation = degrees;
     }
 
-    private void showCamera() {
+    protected void showCamera() {
         if(camera == null) {
             camera = Camera.open(cameraSelection);
             camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
             sizes=camera.getParameters().getSupportedPreviewSizes();
-            SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
+
+            SurfaceView sufi;
+            if(surfaceForCamera == null)
+                sufi= (SurfaceView) findViewById(R.id.surfaceView);
+            else
+                sufi = surfaceForCamera;
+
             if(sufi.getHolder().isCreating()) {
                 sufi.getHolder().addCallback(this);
             }
@@ -306,10 +312,13 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                     Log.d("publish","connection event code "+event.value()+"\n");
                     switch(event.value()){
                         case 0://open
+                            System.out.println("Connection Listener - Open");
                             break;
                         case 1://close
+                            System.out.println("Connection Listener - Close");
                             break;
                         case 2://error
+                            System.out.println("Connection Listener - Error: " + event.message);
                             break;
 
                     }
@@ -321,18 +330,25 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 public void onConnectionEvent(R5ConnectionEvent event) {
                     switch (event) {
                         case CONNECTED:
+                            System.out.println("Stream Listener - Connected");
                             break;
                         case DISCONNECTED:
+                            System.out.println("Stream Listener - Disconnected");
                             break;
                         case START_STREAMING:
+                            System.out.println("Stream Listener - Started Streaming");
                             break;
                         case STOP_STREAMING:
+                            System.out.println("Stream Listener - Stopped Streaming");
                             break;
                         case CLOSE:
+                            System.out.println("Stream Listener - Close");
                             break;
                         case TIMEOUT:
+                            System.out.println("Stream Listener - Timeout");
                             break;
                         case ERROR:
+                            System.out.println("Stream Listener - Error: " + event.message);
                             break;
                     }
                 }
@@ -348,11 +364,10 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
             camera.stopPreview();
 
-            if(!override) {
-                //assign the surface to show the camera output
+            //assign the surface to show the camera output
+            if(this.surfaceForCamera == null)
                 this.surfaceForCamera = (SurfaceView) findViewById(R.id.surfaceView);
-                stream.setView((SurfaceView) findViewById(R.id.surfaceView));
-            }
+            stream.setView((SurfaceView) findViewById(R.id.surfaceView));
 
             //add the camera for streaming
             if(selected_item != null) {
@@ -402,7 +417,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             isPublishing = true;
             stream.publish(Publish.config.name, R5Stream.RecordType.Live);
             camera.startPreview();
-
         }
     }
 

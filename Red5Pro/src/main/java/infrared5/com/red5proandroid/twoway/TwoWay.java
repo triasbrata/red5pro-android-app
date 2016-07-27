@@ -1,6 +1,9 @@
 package infrared5.com.red5proandroid.twoway;
 
+import android.app.ActivityManager;
+import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -13,6 +16,9 @@ import com.red5pro.streaming.R5Connection;
 import com.red5pro.streaming.R5Stream;
 import com.red5pro.streaming.R5StreamProtocol;
 import com.red5pro.streaming.config.R5Configuration;
+import com.red5pro.streaming.source.R5Camera;
+import com.red5pro.streaming.source.R5Microphone;
+import com.red5pro.streaming.view.R5VideoView;
 
 import java.util.ArrayList;
 
@@ -38,29 +44,38 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         super.onCreate(savedInstanceState);
 
-        configure();
-
         flipper = new ViewFlipper(this);
         flipper.setAutoStart(false);
         setContentView(flipper);
 
-        //first item is a holder for settings screen?
-        flipper.addView(new View(this));
+
+        //two way
+        View twView = View.inflate(this, R.layout.activity_two_way, null);
+        flipper.addView(twView);
         //stream list
         flipper.addView(View.inflate(this, R.layout.stream_list, null));
-        //two way
-        flipper.addView(View.inflate(this, R.layout.activity_two_way, null));
+
+        flipper.setDisplayedChild(0);
 
         //don't have a publish settings screen for now?
         //go straight to choosing the stream to subscribe to
         //goToStreamList();
+
+        camera = Camera.open(cameraSelection);
+        Camera.getCameraInfo(cameraSelection, cameraInfo);
+        setOrientationMod();
+        camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
+        sizes=camera.getParameters().getSupportedPreviewSizes();
+
+        surfaceForCamera = (SurfaceView) twView.findViewById(R.id.publishView);
+        configure();
     }
 
     @Override
     protected void openSettings() {
         super.openSettings();
 
-        dialogFragment.onAttach(this);
+//        dialogFragment.onAttach(this);
     }
 
     @Override
@@ -68,7 +83,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         super.onSettingsDialogClose();
 
         goToStreamList();
-        dialogFragment.onDetach();
+//        dialogFragment.onDetach();
     }
 
     protected TextView streamNum;
@@ -78,15 +93,14 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
     protected void goToStreamList(){
 
-        flipper.setDisplayedChild(1);
-
         configure();
+        //publish while selecting stream
+        startPublishing();
+
+        flipper.setDisplayedChild(1);
 
         final View v =findViewById(android.R.id.content);
         v.setKeepScreenOn(true);
-
-        //publish while selecting stream
-        startPublishing();
 
         TextView streamName = (TextView)findViewById(R.id.publishText);
         streamName.setText(config.name);
@@ -104,12 +118,13 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
                 streamList.mCallbacks = null;
 
                 //Go back to the settings page. Either by flipping back, or going back to the previous activity
-                flipper.setDisplayedChild(0);
+//                flipper.setDisplayedChild(0);
                 if(stream != null) {
                     stream.stop();
                     stream = null;
                 }
-                openSettings();
+
+                onBackPressed();
             }
         });
 
@@ -141,7 +156,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         StreamListUtility.get_instance().clearAndDisconnect();
         streamList.mCallbacks = null;
 
-        flipper.setDisplayedChild(2);
+        flipper.setDisplayedChild(0);
 
         ControlBarFragment controlBar = (ControlBarFragment)getFragmentManager().findFragmentById(R.id.control_bar);
         controlBar.setSelection(AppState.PUBLISH);
@@ -154,8 +169,8 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         cameraButton.setOnClickListener(this);
 
         //connect the publisher to a view
-        this.surfaceForCamera = (SurfaceView) findViewById(R.id.publishView);
-        stream.setView((SurfaceView) findViewById(R.id.publishView));
+//        this.surfaceForCamera = (SurfaceView) findViewById(R.id.publishView);
+//        stream.setView((SurfaceView) findViewById(R.id.publishView));
 
         //create the subscriber and connect it
         subStream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));
@@ -164,17 +179,24 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     }
 
     protected void UpdateStreamList(){
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                if(!subName.isEmpty() && !StreamListUtility._liveStreams.contains(subName)){
-                    subName = "";
-                    subButton.setAlpha(0.5f);
-                }
-                streamNum.setText(StreamListUtility._liveStreams.size() + "Streams");
-
                 streamList.connectList();
+
+                if( !subName.isEmpty() ){
+                    if( !StreamListUtility._liveStreams.contains(subName) ){
+                        subName = "";
+                        subButton.setAlpha(0.5f);
+                    }
+                    else {
+                        streamList.setSelection( StreamListUtility._liveStreams.indexOf(subName) );
+                    }
+                }
+
+                streamNum.setText(StreamListUtility._liveStreams.size() + "Streams");
             }
         });
     }
@@ -182,6 +204,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     @Override
     public void onItemSelected(int id) {
         subName = StreamListUtility._liveStreams.get(id);
+
         subButton.setAlpha(1.0f);
     }
 
@@ -195,6 +218,14 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         }
         if(streamList != null){
             streamList.mCallbacks = null;
+        }
+
+        if( camera != null ){
+            try{
+                camera.release();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         super.onDestroy();
