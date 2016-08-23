@@ -3,7 +3,9 @@ package infrared5.com.red5proandroid.twoway;
 import android.app.ActivityManager;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -109,6 +111,23 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         streamList = (SubscribeList) getFragmentManager().findFragmentById(R.id.streamList);
         streamList.mCallbacks = this;
+
+        final DrawerLayout drawer = (DrawerLayout) v;
+
+        findViewById(R.id.slideNavBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        v.findViewById(R.id.content_frame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(drawer.isDrawerOpen(Gravity.LEFT))
+                    drawer.closeDrawer(Gravity.LEFT);
+            }
+        });
 
         TextView backBtn = (TextView) findViewById(R.id.Back);
         backBtn.setOnClickListener(new View.OnClickListener() {

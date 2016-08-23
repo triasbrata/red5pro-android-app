@@ -2,6 +2,7 @@ package infrared5.com.red5proandroid;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import infrared5.com.red5proandroid.twoway.TwoWay;
 public class Main extends Activity {
 
     DialogFragment helpDialog;
+
+    public static Context mainContext;
 
     private void resetButtonGraphics() {
         ImageButton myButton = (ImageButton) findViewById(R.id.btnSubscribe);
@@ -62,6 +65,8 @@ public class Main extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mainContext = this;
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 

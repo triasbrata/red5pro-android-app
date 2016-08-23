@@ -181,7 +181,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     protected void openSettings(){
         try {
             dialogFragment = SettingsDialogFragment.newInstance(AppState.PUBLISH);
-            dialogFragment.show(getFragmentManager().beginTransaction(), "settings_dialog");
+            getFragmentManager().beginTransaction().add(R.id.settings_frame, dialogFragment).commit();
 
             List<String> sb = new ArrayList<String>();
             for(Camera.Size size:this.sizes){

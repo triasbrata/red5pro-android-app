@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,17 +26,22 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.R;
+import infrared5.com.red5proandroid.navigation.SlideNav;
 import infrared5.com.red5proandroid.publish.Publish;
 import infrared5.com.red5proandroid.subscribe.Subscribe;
 
-public class SettingsDialogFragment extends DialogFragment {
+public class SettingsDialogFragment extends Fragment {
 
     private AppState state;
     private OnFragmentInteractionListener mListener;
     private ArrayAdapter adapter;
+    private SlideNav slideNav;
     public static int defaultResolution = 0;
     public static int bitRate = 1000;
 
@@ -225,36 +235,58 @@ public class SettingsDialogFragment extends DialogFragment {
              }
          };
     }
+
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         final View v = inflater.inflate(R.layout.fragment_settings_dialog, null, false);
+
+        final DrawerLayout drawer = (DrawerLayout) v;
+
+        slideNav = (SlideNav) getFragmentManager().findFragmentById(R.id.left_drawer);
 
         ViewGroup streamSettings = (ViewGroup) v.findViewById(R.id.subscribe_settings);
         ViewGroup publishSettings = (ViewGroup) v.findViewById(R.id.publishing_settings);
 
+        //add the nav slide thing here
+        View navBtn = (View)v.findViewById(R.id.slideNavBtn);
+
+        v.findViewById(R.id.content_frame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(drawer.isDrawerOpen(Gravity.LEFT))
+                    drawer.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+        navBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        final Fragment thisFragment = this;
+        TextView subText = (TextView) v.findViewById(R.id.submitTxt);
+        subText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View t) {
+                saveSettings(v);
+                mListener.onSettingsDialogClose();
+
+                getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
+            }
+        });
+
         switch (state) {
             case SUBSCRIBE:
                 publishSettings.setVisibility(View.GONE);
+                subText.setText("SUBSCRIBE");
                 break;
         }
 
-        ContextThemeWrapper ctx = new ContextThemeWrapper(getActivity(), R.style.AppTheme );
-        AlertDialog dialog =  new AlertDialog.Builder(ctx)
-                                    .setView(v)
-                                    .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
-
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            saveSettings(v);
-                                            mListener.onSettingsDialogClose();
-                                            dialog.cancel();
-                                        }
-
-                                    })
-                                    .create();
-
         showUserSettings(v);
-        return dialog;
+        return v;
     }
 
     @Override
