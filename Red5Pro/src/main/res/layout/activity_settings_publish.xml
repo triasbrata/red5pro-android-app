@@ -39,7 +39,8 @@
                 android:editable="true"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/settings_streamname" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,35 +56,41 @@
 
             <RadioGroup
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/settings_quality">
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="LOW"
-                    android:button="@drawable/custom_radio_button" />
+                    android:button="@drawable/custom_radio_button"
+                    android:id="@+id/settings_quality_low" />
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MEDIUM"
                     android:checked="true"
-                    android:button="@drawable/custom_radio_button" />
+                    android:button="@drawable/custom_radio_button"
+                    android:id="@+id/settings_quality_medium" />
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="HIGH"
-                    android:button="@drawable/custom_radio_button" />
+                    android:button="@drawable/custom_radio_button"
+                    android:id="@+id/settings_quality_high" />
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OTHER"
-                    android:button="@drawable/custom_radio_button" />
+                    android:button="@drawable/custom_radio_button"
+                    android:id="@+id/settings_quality_other" />
             </RadioGroup>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:id="@+id/advanced">
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -94,7 +101,8 @@
                     android:layout_height="wrap_content"
                     android:text="ADVANCED"
                     android:elegantTextHeight="false"
-                    android:background="#00ffffff" />
+                    android:background="#00ffffff"
+                    android:paddingRight="10dp" />
             </LinearLayout>
 
             <RelativeLayout
@@ -108,7 +116,8 @@
                     android:layout_alignParentEnd="true"
                     android:background="#00ffffff"
                     android:textStyle="bold"
-                    android:textColor="#e31900" />
+                    android:textColor="#e31900"
+                    android:id="@+id/submit" />
             </RelativeLayout>
         </LinearLayout>
 

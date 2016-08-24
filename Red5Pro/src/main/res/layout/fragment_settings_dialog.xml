@@ -7,7 +7,7 @@
     style="@style/StandardView">
 
     <LinearLayout
-        android:id="@+id/content_frame"
+        android:id="@+id/content"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="20dp"
@@ -44,138 +44,10 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/subscribe_settings"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="STREAM NAME"
-                android:layout_centerVertical="true"
-                style="@style/StandardText" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/settings_streamname"
-                android:singleLine="true"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                style="@style/StandardInput"
-                android:inputType="text"
-                android:hint="stream"
-                android:layout_marginTop="10dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/publishing_settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="QUALITY"
-                    style="@style/StandardText"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true" />
-
-                <RadioGroup
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:orientation="vertical"
-                    android:id="@+id/settings_quality"
-                    android:layout_marginTop="10dp">
-
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="LOW"
-                        android:id="@+id/settings_quality_low"
-                        style="@style/StandardText"
-                        android:checked="false"
-                        android:button="@drawable/radiobutton" />
-
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="MEDIUM"
-                        android:checked="true"
-                        android:id="@+id/settings_quality_medium"
-                        style="@style/StandardText"
-                        android:button="@drawable/radiobutton" />
-
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="HIGH"
-                        android:id="@+id/settings_quality_high"
-                        style="@style/StandardText"
-                        android:button="@drawable/radiobutton" />
-
-                </RadioGroup>
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ADVANCED"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="50dp"
-                    android:id="@+id/textView7" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/more"
-                    android:id="@+id/imageButton" />
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Large"
-            android:text="PUBLISH"
-            android:id="@+id/submitTxt"
-            android:padding="5dp"
-            android:textColor="@android:color/holo_red_dark" />
+            android:layout_height="match_parent"
+            android:id="@+id/settings_frame"
+            android:orientation="vertical"></LinearLayout>
 
     </LinearLayout>
 

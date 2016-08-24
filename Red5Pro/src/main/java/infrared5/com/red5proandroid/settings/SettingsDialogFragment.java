@@ -1,34 +1,23 @@
 package infrared5.com.red5proandroid.settings;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.R;
@@ -41,7 +30,6 @@ public class SettingsDialogFragment extends Fragment {
     private AppState state;
     private OnFragmentInteractionListener mListener;
     private ArrayAdapter adapter;
-    private SlideNav slideNav;
     public static int defaultResolution = 0;
     public static int bitRate = 1000;
 
@@ -243,15 +231,22 @@ public class SettingsDialogFragment extends Fragment {
 
         final DrawerLayout drawer = (DrawerLayout) v;
 
-        slideNav = (SlideNav) getFragmentManager().findFragmentById(R.id.left_drawer);
+        View subView = null;
+        switch (state) {
+            case SUBSCRIBE:
+                subView = inflater.inflate(R.layout.activity_settings_subscribe, null, false);
+                break;
+            case PUBLISH:
+                subView = inflater.inflate(R.layout.activity_settings_publish, null, false);
+                break;
+        }
 
-        ViewGroup streamSettings = (ViewGroup) v.findViewById(R.id.subscribe_settings);
-        ViewGroup publishSettings = (ViewGroup) v.findViewById(R.id.publishing_settings);
+        ((LinearLayout)v.findViewById(R.id.settings_frame)).addView(subView);
 
         //add the nav slide thing here
         View navBtn = (View)v.findViewById(R.id.slideNavBtn);
 
-        v.findViewById(R.id.content_frame).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.content).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(drawer.isDrawerOpen(Gravity.LEFT))
@@ -277,13 +272,6 @@ public class SettingsDialogFragment extends Fragment {
                 getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
             }
         });
-
-        switch (state) {
-            case SUBSCRIBE:
-                publishSettings.setVisibility(View.GONE);
-                subText.setText("SUBSCRIBE");
-                break;
-        }
 
         showUserSettings(v);
         return v;
