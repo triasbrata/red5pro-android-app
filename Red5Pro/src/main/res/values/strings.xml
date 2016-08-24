@@ -4,6 +4,7 @@
     <string name="app_name">Red5Pro</string>
     <string name="title_activity_preview">Red5Pro Publish Preview</string>
     <string name="title_activity_publish">Red5Pro Publish</string>
+    <string name="title_activity_twoway">Red5Pro Two Way</string>
     <string name="title_activity_second_screen">Red5Pro Second Screen</string>
     <string name="title_activity_subscribe">Red5Pro Subscribe</string>
     <string name="title_activity_settings">Red5Pro Settings</string>

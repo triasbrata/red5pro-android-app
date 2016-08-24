@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -40,16 +41,19 @@ import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 public class Publish extends Activity implements SurfaceHolder.Callback, View.OnClickListener,
         ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
 
-    private int cameraSelection = 0;
-    private Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-    private List<Camera.Size> sizes = new ArrayList<Camera.Size>();
+    protected int cameraSelection = 0;
+    protected int cameraOrientation = 0;
+    protected Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+    protected List<Camera.Size> sizes = new ArrayList<Camera.Size>();
     public static Camera.Size selected_size = null;
     public static String selected_item = null;
     public static int preferedResolution = 0;
     public static PublishStreamConfig config = null;
-    private R5Camera r5Cam;
-    private R5Microphone r5Mic;
-    private SurfaceView surfaceForCamera;
+    protected boolean override = false;
+    protected R5Camera r5Cam;
+    protected R5Microphone r5Mic;
+    protected SurfaceView surfaceForCamera;
+    protected SettingsDialogFragment dialogFragment;
 
     static {
         if(config==null){
@@ -60,7 +64,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     protected Camera camera;
     protected boolean isPublishing = false;
 
-    R5Stream stream;
+    protected R5Stream stream;
 
     public final static String TAG = "Preview";
 
@@ -89,7 +93,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     //grab user data to be used in R5Configuration
-    private void configure() {
+    protected void configure() {
         SharedPreferences preferences = getSharedPreferences(getStringResource(R.string.preference_file), MODE_MULTI_PROCESS);
         config.host = preferences.getString(getStringResource(R.string.preference_host), getStringResource(R.string.preference_default_host));
         config.port = preferences.getInt(getStringResource(R.string.preference_port), getIntResource(R.integer.preference_default_port));
@@ -106,6 +110,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         super.onCreate(savedInstanceState);
 
+        if(override)
+            return;
+
         //assign the layout view
         setContentView(R.layout.activity_publish);
 
@@ -121,6 +128,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         controlBar.displayPublishControls(true);
 
         //activate the camera
+        Camera.getCameraInfo(cameraSelection, cameraInfo);
+        setOrientationMod();
         showCamera();
 
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
@@ -169,10 +178,10 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         return super.onOptionsItemSelected(item);
     }
 
-    private void openSettings(){
+    protected void openSettings(){
         try {
-            SettingsDialogFragment newFragment = SettingsDialogFragment.newInstance(AppState.PUBLISH);
-            newFragment.show(getFragmentManager().beginTransaction(), "settings_dialog");
+            dialogFragment = SettingsDialogFragment.newInstance(AppState.PUBLISH);
+            getFragmentManager().beginTransaction().add(R.id.settings_frame, dialogFragment).commit();
 
             List<String> sb = new ArrayList<String>();
             for(Camera.Size size:this.sizes){
@@ -198,7 +207,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 }
             };
 
-            newFragment.setSpinnerAdapter(adapter);
+            dialogFragment.setSpinnerAdapter(adapter);
 
         }
         catch(Exception e) {
@@ -217,16 +226,50 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             // can't find camera at that index, set default
             cameraSelection = Camera.CameraInfo.CAMERA_FACING_BACK;
         }
+        setOrientationMod();
+
         stopCamera();
         showCamera();
     }
 
-    private void showCamera() {
+    protected void setOrientationMod(){
+
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_90:
+                if(cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
+                    degrees = 90;
+                else
+                    degrees = 270;
+                break;
+            case Surface.ROTATION_270:
+                if(cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
+                    degrees = 270;
+                else
+                    degrees = 90;
+                break;
+        }
+
+        degrees += cameraInfo.orientation;
+
+        cameraOrientation = degrees;
+    }
+
+    protected void showCamera() {
         if(camera == null) {
             camera = Camera.open(cameraSelection);
-            camera.setDisplayOrientation(90);
+            camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
             sizes=camera.getParameters().getSupportedPreviewSizes();
-            SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
+
+            SurfaceView sufi;
+            if(surfaceForCamera == null)
+                sufi= (SurfaceView) findViewById(R.id.surfaceView);
+            else
+                sufi = surfaceForCamera;
+
             if(sufi.getHolder().isCreating()) {
                 sufi.getHolder().addCallback(this);
             }
@@ -250,8 +293,11 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     //called by record button
-    private void startPublishing() {
+    protected void startPublishing() {
         if(!isPublishing) {
+            if(stream != null){
+                stream.stop();
+            }
 
             Handler mHand = new Handler();
 
@@ -266,10 +312,13 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                     Log.d("publish","connection event code "+event.value()+"\n");
                     switch(event.value()){
                         case 0://open
+                            System.out.println("Connection Listener - Open");
                             break;
                         case 1://close
+                            System.out.println("Connection Listener - Close");
                             break;
                         case 2://error
+                            System.out.println("Connection Listener - Error: " + event.message);
                             break;
 
                     }
@@ -281,27 +330,43 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 public void onConnectionEvent(R5ConnectionEvent event) {
                     switch (event) {
                         case CONNECTED:
+                            System.out.println("Stream Listener - Connected");
                             break;
                         case DISCONNECTED:
+                            System.out.println("Stream Listener - Disconnected");
                             break;
                         case START_STREAMING:
+                            System.out.println("Stream Listener - Started Streaming");
                             break;
                         case STOP_STREAMING:
+                            System.out.println("Stream Listener - Stopped Streaming");
                             break;
                         case CLOSE:
+                            System.out.println("Stream Listener - Close");
                             break;
                         case TIMEOUT:
+                            System.out.println("Stream Listener - Timeout");
                             break;
                         case ERROR:
+                            System.out.println("Stream Listener - Error: " + event.message);
                             break;
                     }
                 }
             });
 
+            if(camera == null){
+                camera = Camera.open(cameraSelection);
+                Camera.getCameraInfo(cameraSelection, cameraInfo);
+                setOrientationMod();
+                camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
+                sizes=camera.getParameters().getSupportedPreviewSizes();
+            }
+
             camera.stopPreview();
 
             //assign the surface to show the camera output
-            this.surfaceForCamera = (SurfaceView) findViewById(R.id.surfaceView);
+            if(this.surfaceForCamera == null)
+                this.surfaceForCamera = (SurfaceView) findViewById(R.id.surfaceView);
             stream.setView((SurfaceView) findViewById(R.id.surfaceView));
 
             //add the camera for streaming
@@ -329,12 +394,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 r5Cam.setBitrate(config.bitrate);
             }
 
-            if(cameraSelection==1) {
-                r5Cam.setOrientation(270);
-            }
-            else {
-                r5Cam.setOrientation(90);
-            }
+            r5Cam.setOrientation(cameraOrientation);
             r5Mic = new R5Microphone();
 
             if(config.video) {
@@ -357,7 +417,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             isPublishing = true;
             stream.publish(Publish.config.name, R5Stream.RecordType.Live);
             camera.startPreview();
-
         }
     }
 

@@ -1,12 +1,13 @@
-<ScrollView
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#969696"
-    tools:context=".settings.SettingsDialogFragment">
+    tools:context=".settings.SettingsDialogFragment"
+    style="@style/StandardView">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/content_frame"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="20dp"
@@ -14,242 +15,176 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Settings"
-            android:textColor="#ffffffff"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true" />
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_marginTop="50dp"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/border"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/slideNavBtn"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/menu"
+                android:padding="5dp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="App Name"
-                android:paddingLeft="10dp"
-                android:layout_centerVertical="true"
-                android:textColor="#ffffffff" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:id="@+id/settings_appname"
-                android:singleLine="true"
-                android:textColor="#ffff0000" />
+                style="@style/StandardText"
+                android:layout_below="@+id/slideNavBtn" />
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/subscribe_settings"
-            android:layout_marginTop="100dp"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/border">
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Stream Name"
-                android:paddingLeft="10dp"
+                android:text="STREAM NAME"
                 android:layout_centerVertical="true"
-                android:textColor="#ffffffff" />
+                style="@style/StandardText" />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:id="@+id/settings_streamname"
                 android:singleLine="true"
-                android:textColor="#ffff0000" />
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                style="@style/StandardInput"
+                android:inputType="text"
+                android:hint="stream"
+                android:layout_marginTop="10dp" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/publishing_settings"
-            android:layout_marginTop="150dp"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/border">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quality"
-                    android:paddingStart="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:layout_centerVertical="true"
-                    android:textColor="#ffffffff"/>
+                    android:text="QUALITY"
+                    style="@style/StandardText"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true" />
 
                 <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    android:id="@+id/settings_quality">
+                    android:orientation="vertical"
+                    android:id="@+id/settings_quality"
+                    android:layout_marginTop="10dp">
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Low"
-                        android:textColor="#ffff0000"
-                        android:id="@+id/settings_quality_low"/>
+                        android:text="LOW"
+                        android:id="@+id/settings_quality_low"
+                        style="@style/StandardText"
+                        android:checked="false"
+                        android:button="@drawable/radiobutton" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Medium"
+                        android:text="MEDIUM"
                         android:checked="true"
-                        android:textColor="#ffff0000"
-                        android:textColorHighlight="#ffff0000"
-                        android:id="@+id/settings_quality_medium" />
+                        android:id="@+id/settings_quality_medium"
+                        style="@style/StandardText"
+                        android:button="@drawable/radiobutton" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="High"
-                        android:textColor="#ffff0000"
-                        android:id="@+id/settings_quality_high"/>
+                        android:text="HIGH"
+                        android:id="@+id/settings_quality_high"
+                        style="@style/StandardText"
+                        android:button="@drawable/radiobutton" />
 
                 </RadioGroup>
 
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ADVANCED"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:id="@+id/textView7" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/more"
+                    android:id="@+id/imageButton" />
+
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_marginTop="50dp"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true">
+        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".50"
-                    android:layout_marginRight="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:text="PUBLISH"
+            android:id="@+id/submitTxt"
+            android:padding="5dp"
+            android:textColor="@android:color/holo_red_dark" />
 
-                    <CheckBox
-                        android:layout_marginLeft="10dp"
-                        android:id="@+id/settings_audio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="10dp"
-                        android:textColor="#fff"
-                        android:checked="true"
-                        android:button="@drawable/check_visuals"
-                        android:text="Audio" />
+    </LinearLayout>
 
-                </LinearLayout>
+    <fragment
+        android:id="@+id/left_drawer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:name="infrared5.com.red5proandroid.navigation.SlideNav"
+        tools:layout="@layout/fragment_slide_nav" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".50"
-                    android:layout_marginLeft="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border">
-
-                    <CheckBox
-                        android:layout_marginLeft="10dp"
-                        android:id="@+id/settings_video"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="10dp"
-                        android:textColor="#fff"
-                        android:checked="true"
-                        android:button="@drawable/check_visuals"
-                        android:text="Video" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="100dp"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".50"
-                    android:layout_marginRight="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border">
-
-                    <CheckBox
-                        android:layout_marginLeft="10dp"
-                        android:id="@+id/settings_adaptive_bitrate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="10dp"
-                        android:textColor="#fff"
-                        android:checked="true"
-                        android:button="@drawable/check_visuals"
-                        android:text="Adaptive Bitrate" />
-
-                </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight=".50"
-                android:layout_marginLeft="5dp"
-                android:layout_height="match_parent">
-            </LinearLayout>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-</ScrollView>
+</android.support.v4.widget.DrawerLayout>

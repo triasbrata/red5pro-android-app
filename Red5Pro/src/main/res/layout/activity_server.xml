@@ -46,29 +46,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Please enter your server information:"
-            android:layout_marginBottom="20dp"
-            android:textColor="#ffffffff" />
+            style="@style/StandardText" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Server IP or URL"
-            android:textColor="#ffffffff" />
+            android:layout_marginTop="10dp"
+            style="@style/StandardText" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="0.0.0.0"
+            android:hint="127.0.0.1"
             android:editable="true"
-            android:layout_marginBottom="10dp"
-            android:textColor="#ffff0000"
-            android:id="@+id/serverTextField" />
+            android:id="@+id/serverTextField"
+            style="@style/StandardInput"
+            android:layout_marginTop="10dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Port"
-            android:textColor="#ffffffff" />
+            android:text="PORT"
+            style="@style/StandardText"
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -76,21 +77,22 @@
             android:text="8554"
             android:hint="8554"
             android:editable="true"
-            android:layout_marginBottom="20dp"
-            android:textColor="#ffff0000"
-            android:id="@+id/portTextField" />
+            android:id="@+id/portTextField"
+            style="@style/StandardInput"
+            android:layout_marginTop="10dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OK"
                 android:layout_alignParentEnd="true"
-                android:textColor="#ffe30a00"
-                android:id="@+id/serverSubmitBtn" />
+                android:id="@+id/serverSubmitBtn"
+                style="@style/StandardButtonLink" />
 
         </RelativeLayout>
 

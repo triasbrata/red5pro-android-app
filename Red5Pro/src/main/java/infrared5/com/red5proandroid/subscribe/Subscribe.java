@@ -165,8 +165,8 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     private void openSettings() {
         try {
-            DialogFragment newFragment = SettingsDialogFragment.newInstance(AppState.SUBSCRIBE);
-            newFragment.show(getFragmentManager().beginTransaction(), "settings_dialog");
+            SettingsDialogFragment newFragment = SettingsDialogFragment.newInstance(AppState.SUBSCRIBE);
+            getFragmentManager().beginTransaction().add(R.id.settings_frame, newFragment).commit();
         }
         catch(Exception e) {
             Log.i(TAG, "Can't open settings: " + e.getMessage());
