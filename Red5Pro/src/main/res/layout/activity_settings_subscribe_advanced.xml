@@ -8,19 +8,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SETTINGS"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp" />
-        </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +25,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/serverText" />
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +46,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/portText" />
         </LinearLayout>
 
         <LinearLayout
@@ -78,7 +67,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/appText" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,7 +88,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/nameText" />
         </LinearLayout>
 
         <LinearLayout
@@ -115,7 +106,9 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/check_visuals" />
+                android:background="@drawable/check_visuals"
+                android:id="@+id/debugCheck"
+                android:clickable="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -135,7 +128,8 @@
                     android:text="BACK"
                     android:background="#00ffffff"
                     android:textStyle="bold"
-                    android:textColor="#e31900" />
+                    android:textColor="#e31900"
+                    android:id="@+id/backBtn" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -146,10 +140,11 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PUBLISH"
+                    android:text="SUBSCRIBE"
                     android:background="#00ffffff"
                     android:textStyle="bold"
-                    android:textColor="#e31900" />
+                    android:textColor="#e31900"
+                    android:id="@+id/submitBtn" />
             </RelativeLayout>
         </LinearLayout>
 

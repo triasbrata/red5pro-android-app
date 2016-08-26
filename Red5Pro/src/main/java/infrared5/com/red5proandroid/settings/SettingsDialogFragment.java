@@ -3,9 +3,11 @@ package infrared5.com.red5proandroid.settings;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.util.Size;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,19 +19,25 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.R;
-import infrared5.com.red5proandroid.navigation.SlideNav;
 import infrared5.com.red5proandroid.publish.Publish;
-import infrared5.com.red5proandroid.subscribe.Subscribe;
+import infrared5.com.red5proandroid.utilities.StreamListUtility;
+import infrared5.com.red5proandroid.utilities.SubscribeList;
 
 public class SettingsDialogFragment extends Fragment {
 
     private AppState state;
     private OnFragmentInteractionListener mListener;
+    private SubscribeList streamList;
     private ArrayAdapter adapter;
+    private View settingsSubView;
+    private View advancedSubView;
+    private TextView streamNum;
+    private String subSelected;
     public static int defaultResolution = 0;
     public static int bitRate = 1000;
 
@@ -91,15 +99,15 @@ public class SettingsDialogFragment extends Fragment {
         SharedPreferences.Editor editor = preferences.edit();
 
 //        EditText app = getField(v, R.id.settings_appname);
-        EditText name = getField(v, R.id.settings_streamname);
 
 //        editor.putString(getPreferenceValue(R.string.preference_app), app.getText().toString());
-        editor.putString(getPreferenceValue(R.string.preference_name), name.getText().toString());
 
         if(state == AppState.PUBLISH) {
 //            CheckBox cb = (CheckBox)v.findViewById(R.id.settings_audio);
 //            CheckBox cbv = (CheckBox)v.findViewById(R.id.settings_video);
 //            CheckBox cba = (CheckBox)v.findViewById(R.id.settings_adaptive_bitrate);
+            EditText name = getField(v, R.id.settings_streamname);
+            editor.putString(getPreferenceValue(R.string.preference_name), name.getText().toString());
 
             final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
             final int checkedID = group.getCheckedRadioButtonId();
@@ -116,6 +124,7 @@ public class SettingsDialogFragment extends Fragment {
                     resolutionHeight = 240;
                     selectedQuality = 0;
                     break;
+                default:
                 case R.id.settings_quality_medium:
                     break;
                 case R.id.settings_quality_high:
@@ -124,7 +133,11 @@ public class SettingsDialogFragment extends Fragment {
                     resolutionHeight = 1080;
                     selectedQuality = 2;
                     break;
-                default:
+                case R.id.settings_quality_other:
+                    bitRate = Publish.config.bitrate;
+                    resolutionWidth = Integer.valueOf( Publish.selected_item.split("x")[0] );
+                    resolutionHeight = Integer.valueOf( Publish.selected_item.split("x")[1] );
+                    selectedQuality = 3;
                     break;
             }
 
@@ -150,6 +163,9 @@ public class SettingsDialogFragment extends Fragment {
 //            editor.putBoolean(getPreferenceValue(R.string.preference_video), cbv.isChecked());
 //            editor.putBoolean(getPreferenceValue(R.string.preference_adaptive_bitrate), cba.isChecked());
         }
+        else {
+            editor.putString(getPreferenceValue(R.string.preference_name), subSelected);
+        }
 
         editor.apply();
     }
@@ -164,48 +180,87 @@ public class SettingsDialogFragment extends Fragment {
         Publish.config.host = host;
 
 //        EditText app = getField(v, R.id.settings_appname);
-        EditText name = getField(v, R.id.settings_streamname);
-
-        final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
-
-        int quality = preferences.getInt(getResources().getString(R.string.preference_resolutionQuality), 1);
-        Log.d("SettingsDialogFragment", "Got quality " + quality);
-
-        switch (quality) {
-            case 0:
-                ((RadioButton)group.findViewById(R.id.settings_quality_low)).setChecked(true);
-                Publish.preferedResolution = 0;
-                Publish.selected_item = "426x240";
-                Publish.config.bitrate = 400;
-                break;
-            case 1:
-                ((RadioButton)group.findViewById(R.id.settings_quality_medium)).setChecked(true);
-                Publish.preferedResolution = 1;
-                Publish.selected_item = "854x480";
-                Publish.config.bitrate = 1000;
-                break;
-            case 2:
-                ((RadioButton)group.findViewById(R.id.settings_quality_high)).setChecked(true);
-                Publish.preferedResolution = 2;
-                Publish.selected_item = "1920x1080";
-                Publish.config.bitrate = 4500;
-                break;
-            default:
-                ((RadioButton)group.findViewById(R.id.settings_quality_medium)).setChecked(true);
-                Publish.preferedResolution = 1;
-                Publish.selected_item = "854x480";
-                Publish.config.bitrate = 1000;
-                break;
-        }
-
-        name.setText(preferences.getString(getPreferenceValue(R.string.preference_name), getPreferenceValue(R.string.preference_default_name)));
 
         switch (state) {
             case PUBLISH:
+                EditText name = getField(v, R.id.settings_streamname);
+                name.setText(preferences.getString(getPreferenceValue(R.string.preference_name), getPreferenceValue(R.string.preference_default_name)));
+
+                RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
+
+                int quality = preferences.getInt(getPreferenceValue(R.string.preference_resolutionQuality), getResources().getInteger(R.integer.preference_default_resolutionQuality));
+                Log.d("SettingsDialogFragment", "Got quality " + quality);
+
+                switch (quality) {
+                    case 0:
+                        ((RadioButton)group.findViewById(R.id.settings_quality_low)).setChecked(true);
+                        Publish.preferedResolution = 0;
+                        Publish.selected_item = "426x240";
+                        Publish.config.bitrate = 400;
+                        break;
+                    case 1:
+                    default:
+                        ((RadioButton)group.findViewById(R.id.settings_quality_medium)).setChecked(true);
+                        Publish.preferedResolution = 1;
+                        Publish.selected_item = "854x480";
+                        Publish.config.bitrate = 1000;
+                        break;
+                    case 2:
+                        ((RadioButton)group.findViewById(R.id.settings_quality_high)).setChecked(true);
+                        Publish.preferedResolution = 2;
+                        Publish.selected_item = "1920x1080";
+                        Publish.config.bitrate = 4500;
+                        break;
+                    case 3:
+                        ((RadioButton)group.findViewById(R.id.settings_quality_other)).setChecked(true);
+                        Publish.preferedResolution = 3;
+                        Publish.selected_item = preferences.getInt(getResources().getString(R.string.preference_resolutionWidth), getResources().getInteger(R.integer.preference_default_resolutionWidth)) +
+                                "x" + preferences.getInt(getResources().getString(R.string.preference_resolutionHeight), getResources().getInteger(R.integer.preference_default_resolutionHeight));// "854x480";
+                        Publish.config.bitrate = preferences.getInt(getResources().getString(R.string.preference_bitrate), getResources().getInteger(R.integer.preference_default_bitrate));
+                        break;
+                }
+                break;
             case SUBSCRIBE:
-//                app.setText(preferences.getString(getPreferenceValue(R.string.preference_app), getPreferenceValue(R.string.preference_default_app)));
+                streamNum = (TextView) v.findViewById(R.id.StreamNum);
+
+                streamList = (SubscribeList) getFragmentManager().findFragmentById(R.id.streamList);
+                streamList.mCallbacks = new SubscribeList.Callbacks() {
+                    @Override
+                    public void onItemSelected(int id) {
+                        subSelected = StreamListUtility._liveStreams.get(id);
+                    }
+                };
+                StreamListUtility util = StreamListUtility.get_instance(getActivity());
+                util.callWithRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        UpdateStreamList();
+                    }
+                });
                 break;
         }
+    }
+
+    protected void UpdateStreamList(){
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                streamList.connectList();
+
+                if( subSelected != null ){
+                    if( !StreamListUtility._liveStreams.contains(subSelected) && advancedSubView.getParent() == null){
+                        subSelected = null;
+                    }
+                    else {
+                        streamList.setSelection( StreamListUtility._liveStreams.indexOf(subSelected) );
+                    }
+                }
+
+                streamNum.setText(StreamListUtility._liveStreams.size() + "Streams");
+            }
+        });
     }
 
     private AdapterView.OnItemSelectedListener getItemSelectedHandlerForResolution(){
@@ -231,17 +286,19 @@ public class SettingsDialogFragment extends Fragment {
 
         final DrawerLayout drawer = (DrawerLayout) v;
 
-        View subView = null;
+        settingsSubView = null;
         switch (state) {
             case SUBSCRIBE:
-                subView = inflater.inflate(R.layout.activity_settings_subscribe, null, false);
+                settingsSubView = inflater.inflate(R.layout.activity_settings_subscribe, null, false);
+                advancedSubView = inflater.inflate(R.layout.activity_settings_subscribe_advanced, null, false);
                 break;
             case PUBLISH:
-                subView = inflater.inflate(R.layout.activity_settings_publish, null, false);
+                settingsSubView = inflater.inflate(R.layout.activity_settings_publish, null, false);
+                advancedSubView = inflater.inflate(R.layout.activity_settings_publish_advanced, null, false);
                 break;
         }
 
-        ((LinearLayout)v.findViewById(R.id.settings_frame)).addView(subView);
+        ((LinearLayout)v.findViewById(R.id.settings_frame)).addView(settingsSubView);
 
         //add the nav slide thing here
         View navBtn = (View)v.findViewById(R.id.slideNavBtn);
@@ -261,11 +318,21 @@ public class SettingsDialogFragment extends Fragment {
             }
         });
 
+        v.findViewById(R.id.advanced).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchToAdvanced(v.findViewById(R.id.settings_frame));
+            }
+        });
+
         final Fragment thisFragment = this;
-        TextView subText = (TextView) v.findViewById(R.id.submitTxt);
+        TextView subText = (TextView) v.findViewById(R.id.submit);
         subText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View t) {
+                if( state == AppState.SUBSCRIBE && subSelected == null)
+                    return;
+
                 saveSettings(v);
                 mListener.onSettingsDialogClose();
 
@@ -275,6 +342,162 @@ public class SettingsDialogFragment extends Fragment {
 
         showUserSettings(v);
         return v;
+    }
+
+    public void switchToAdvanced(View v){
+        SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
+
+        String val;
+        //server
+        val = preferences.getString(getPreferenceValue(R.string.preference_host), getResources().getString(R.string.preference_default_host));
+        getField(advancedSubView, R.id.serverText).setText(val);
+        //port
+        val = "" + preferences.getInt(getPreferenceValue(R.string.preference_port), getResources().getInteger(R.integer.preference_default_port));
+        getField(advancedSubView, R.id.portText).setText(val);
+        //app
+        val = preferences.getString(getPreferenceValue(R.string.preference_app), getResources().getString(R.string.preference_default_app));
+        getField(advancedSubView, R.id.appText).setText(val);
+        //debug check
+        buildCheckHandle(R.string.preference_debug, R.bool.preference_default_debug, R.id.debugCheck);
+
+        if(state == AppState.PUBLISH) {
+            //name
+            val = getField(settingsSubView, R.id.settings_streamname).getText().toString();
+            getField(advancedSubView, R.id.nameText).setText(val);
+            //bitrate
+            getField(advancedSubView, R.id.rateText).setText("" + Publish.config.bitrate);
+            //resolution
+            getField(advancedSubView, R.id.resolutionText).setText(Publish.selected_item);
+            //audio check
+            buildCheckHandle(R.string.preference_audio, R.bool.preference_default_audio, R.id.audioCheck);
+            //video check
+            buildCheckHandle(R.string.preference_video, R.bool.preference_default_video, R.id.videoCheck);
+            //adaptive check
+            buildCheckHandle(R.string.preference_adaptive_bitrate, R.bool.preference_default_adaptive_bitrate, R.id.adaptiveCheck);
+        }
+        else {
+            //name
+            val = preferences.getString(getPreferenceValue(R.string.preference_name), getResources().getString(R.string.preference_default_name));
+            getField(advancedSubView, R.id.nameText).setText(subSelected != null ? subSelected : val);
+        }
+
+        // Back
+        advancedSubView.findViewById(R.id.backBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                returnFromAdvanced();
+            }
+        });
+
+        final Fragment thisFragment = this;
+        // Publish/Subscribe
+        advancedSubView.findViewById(R.id.submitBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                saveAdvancedSettings();
+
+                saveSettings(settingsSubView);
+                mListener.onSettingsDialogClose();
+
+                getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
+            }
+        });
+
+        ((LinearLayout)v).removeView(settingsSubView);
+        ((LinearLayout)v).addView(advancedSubView);
+    }
+
+    public void buildCheckHandle( final int prefID, final int defaultID, final int viewID ){
+        final SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
+
+        final int checkEmpty = R.drawable.check_visuals;
+        final int checkOn = R.drawable.checkbox;
+
+        final ImageButton check = (ImageButton)advancedSubView.findViewById(viewID);
+        if( preferences.getBoolean(getPreferenceValue(prefID), getResources().getBoolean(defaultID)) ){
+            check.setBackgroundResource(checkOn);
+        }
+
+        check.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = preferences.edit();
+                if( preferences.getBoolean(getPreferenceValue(prefID), getResources().getBoolean(defaultID)) ){
+                    check.setBackgroundResource(checkEmpty);
+                    editor.putBoolean(getPreferenceValue(prefID), false);
+                }
+                else{
+                    check.setBackgroundResource(checkOn);
+                    editor.putBoolean(getPreferenceValue(prefID), true);
+                }
+                editor.apply();
+            }
+        });
+    }
+
+    public void returnFromAdvanced(){
+        if(!saveAdvancedSettings())
+            return;
+
+        if(state == AppState.PUBLISH)
+            showUserSettings(settingsSubView);
+        else{
+            subSelected = getField(advancedSubView, R.id.nameText).getText().toString();
+            UpdateStreamList();
+        }
+
+        RelativeLayout parent = (RelativeLayout)advancedSubView.getParent();
+        parent.removeView(advancedSubView);
+        parent.addView(settingsSubView);
+    }
+
+    public boolean saveAdvancedSettings(){
+        SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        //server
+        editor.putString(getPreferenceValue(R.string.preference_host), getField(advancedSubView, R.id.serverText).getText().toString());
+        //port
+        editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(getField(advancedSubView, R.id.portText).getText().toString()));
+        //app
+        editor.putString(getPreferenceValue(R.string.preference_app), getField(advancedSubView, R.id.appText).getText().toString());
+
+        if( state == AppState.PUBLISH ) {
+            //name
+            editor.putString(getPreferenceValue(R.string.preference_name), getField(advancedSubView, R.id.nameText).getText().toString());
+            //bitrate/resolution
+            int baseBitrate = preferences.getInt(getPreferenceValue(R.string.preference_bitrate), getResources().getInteger(R.integer.preference_default_bitrate));
+            int newBitrate = Integer.parseInt( getField(advancedSubView, R.id.rateText).getText().toString() );
+            String newResolution = getField(advancedSubView, R.id.resolutionText).getText().toString();
+
+            if(baseBitrate != newBitrate || Publish.selected_item != newResolution ) {
+
+                if (newResolution.contains("x")) {
+                    String[] bits = newResolution.split("x");
+                    try {
+                        Integer.parseInt(bits[0]);
+                        Integer.parseInt(bits[1]);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        getField(advancedSubView, R.id.resolutionText).setTextColor(Color.RED);
+                        return false;
+                    }
+                    getField(advancedSubView, R.id.resolutionText).setTextColor(Color.BLACK);
+                } else {
+                    getField(advancedSubView, R.id.resolutionText).setTextColor(Color.RED);
+                    return false;
+                }
+                editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), 3);
+                editor.putInt(getPreferenceValue(R.string.preference_bitrate), newBitrate);
+                editor.putInt(getPreferenceValue(R.string.preference_resolutionWidth), Integer.parseInt(newResolution.split("x")[0]));
+                editor.putInt(getPreferenceValue(R.string.preference_resolutionHeight), Integer.parseInt(newResolution.split("x")[1]));
+
+                Publish.selected_item = newResolution;
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -300,6 +523,17 @@ public class SettingsDialogFragment extends Fragment {
         ImageButton settingsButton = (ImageButton) getActivity().findViewById(R.id.btnSettings);
         if(settingsButton != null) {
             settingsButton.setImageResource(R.drawable.settings_grey);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        StreamListUtility.get_instance().clearAndDisconnect();
+
+        if(streamList != null){
+            streamList.mCallbacks = null;
         }
     }
 

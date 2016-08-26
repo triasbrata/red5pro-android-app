@@ -69,7 +69,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
         sizes=camera.getParameters().getSupportedPreviewSizes();
 
-        surfaceForCamera = (SurfaceView) twView.findViewById(R.id.publishView);
+        surfaceForCamera = (R5VideoView) twView.findViewById(R.id.video);
         configure();
     }
 
@@ -148,7 +148,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         });
 
         //Subscribe hit
-        subButton = (TextView) findViewById(R.id.Subscribe);
+        subButton = (TextView) findViewById(R.id.submit);
         subButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

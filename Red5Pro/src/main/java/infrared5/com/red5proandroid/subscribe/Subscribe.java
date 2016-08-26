@@ -55,6 +55,10 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         return getResources().getInteger(id);
     }
 
+    public boolean getBoolResource(int id){
+        return getResources().getBoolean(id);
+    }
+
     //setup configuration
     private void configure() {
         SharedPreferences preferences = getSharedPreferences(getStringResource(R.string.preference_file), MODE_MULTI_PROCESS);
@@ -62,6 +66,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         streamParams.port = preferences.getInt(getStringResource(R.string.preference_port), getIntResource(R.integer.preference_default_port));
         streamParams.app = preferences.getString(getStringResource(R.string.preference_app), getStringResource(R.string.preference_default_app));
         streamParams.name = preferences.getString(getStringResource(R.string.preference_name), getStringResource(R.string.preference_default_name));
+        streamParams.debug = preferences.getBoolean(getStringResource(R.string.preference_debug), getBoolResource(R.bool.preference_default_debug));
     }
 
     @Override
@@ -140,6 +145,8 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
         //associate the video object with the red5 SDK video view
         R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
+        //set the debug view
+        videoView.showDebugView(streamParams.debug);
         //attach the stream
         videoView.attachStream(stream);
         //start the stream

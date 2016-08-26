@@ -15,7 +15,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="fill_horizontal">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -46,8 +47,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/settings_frame"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical"
+            android:id="@+id/settings_frame"></LinearLayout>
 
     </LinearLayout>
 

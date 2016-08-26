@@ -9,4 +9,5 @@ public class PublishStreamConfig {
     public Boolean audio;
     public Boolean video;
     public Boolean adaptiveBitrate;
+    public Boolean debug;
 }

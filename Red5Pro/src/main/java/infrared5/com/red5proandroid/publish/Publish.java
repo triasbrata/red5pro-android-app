@@ -29,6 +29,7 @@ import com.red5pro.streaming.event.R5ConnectionListener;
 import com.red5pro.streaming.source.R5AdaptiveBitrateController;
 import com.red5pro.streaming.source.R5Camera;
 import com.red5pro.streaming.source.R5Microphone;
+import com.red5pro.streaming.view.R5VideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     protected boolean override = false;
     protected R5Camera r5Cam;
     protected R5Microphone r5Mic;
-    protected SurfaceView surfaceForCamera;
+    protected R5VideoView surfaceForCamera;
     protected SettingsDialogFragment dialogFragment;
 
     static {
@@ -99,10 +100,11 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         config.port = preferences.getInt(getStringResource(R.string.preference_port), getIntResource(R.integer.preference_default_port));
         config.app = preferences.getString(getStringResource(R.string.preference_app), getStringResource(R.string.preference_default_app));
         config.name = preferences.getString(getStringResource(R.string.preference_name), getStringResource(R.string.preference_default_name));
-        config.bitrate = preferences.getInt(getStringResource(R.string.preference_bitrate), Integer.parseInt(getStringResource(R.string.preference_default_bitrate)));
+        config.bitrate = preferences.getInt(getStringResource(R.string.preference_bitrate), getIntResource(R.integer.preference_default_bitrate));
         config.audio = preferences.getBoolean(getStringResource(R.string.preference_audio), getBooleanResource(R.bool.preference_default_audio));
         config.video = preferences.getBoolean(getStringResource(R.string.preference_video), getBooleanResource(R.bool.preference_default_video));
         config.adaptiveBitrate = preferences.getBoolean(getStringResource(R.string.preference_adaptive_bitrate), getBooleanResource(R.bool.preference_default_adaptive_bitrate));
+        config.debug = preferences.getBoolean(getStringResource(R.string.preference_debug), getBooleanResource(R.bool.preference_default_debug));
     }
 
     @Override
@@ -264,19 +266,19 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
             sizes=camera.getParameters().getSupportedPreviewSizes();
 
-            SurfaceView sufi;
-            if(surfaceForCamera == null)
-                sufi= (SurfaceView) findViewById(R.id.surfaceView);
-            else
-                sufi = surfaceForCamera;
+//            R5VideoView sufi;
+//            if(surfaceForCamera == null)
+//                sufi= (R5VideoView) findViewById(R.id.video);
+//            else
+//                sufi = surfaceForCamera;
 
-            if(sufi.getHolder().isCreating()) {
-                sufi.getHolder().addCallback(this);
-            }
-            else {
-                sufi.getHolder().addCallback(this);
-                this.surfaceCreated(sufi.getHolder());
-            }
+//            if(sufi.getHolder().isCreating()) {
+//                sufi.getHolder().addCallback(this);
+//            }
+//            else {
+//                sufi.getHolder().addCallback(this);
+//                this.surfaceCreated(sufi.getHolder());
+//            }
         }
     }
 
@@ -366,8 +368,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
             //assign the surface to show the camera output
             if(this.surfaceForCamera == null)
-                this.surfaceForCamera = (SurfaceView) findViewById(R.id.surfaceView);
-            stream.setView((SurfaceView) findViewById(R.id.surfaceView));
+                this.surfaceForCamera = (R5VideoView) findViewById(R.id.video);
+            this.surfaceForCamera.attachStream(stream);
+//            stream.setView((SurfaceView) findViewById(R.id.surfaceView));
 
             //add the camera for streaming
             if(selected_item != null) {
@@ -375,10 +378,11 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 String bits[] = selected_item.split("x");
                 int pW= Integer.valueOf(bits[0]);
                 int pH=  Integer.valueOf(bits[1]);
-                if((pW/2) %16 !=0){
-                    pW=320;
-                    pH=240;
-                }
+                //I don't know why this code was added, looks like it overrides the default resolution selections?
+//                if((pW/2) %16 !=0){
+//                    pW=320;
+//                    pH=240;
+//                }
                 Camera.Parameters parameters = camera.getParameters();
                 parameters.setPreviewSize(pW, pH);
                 camera.setParameters(parameters);
@@ -413,6 +417,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 //                    adaptiveBitrateController.requiresVideo = true;
                 }
             }
+
+            this.surfaceForCamera.showDebugView(config.debug);
 
             isPublishing = true;
             stream.publish(Publish.config.name, R5Stream.RecordType.Live);

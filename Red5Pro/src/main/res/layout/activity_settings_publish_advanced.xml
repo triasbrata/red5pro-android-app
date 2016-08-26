@@ -8,19 +8,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SETTINGS"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp" />
-        </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +25,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/serverText" />
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +46,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/portText" />
         </LinearLayout>
 
         <LinearLayout
@@ -78,7 +67,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/appText" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,7 +88,8 @@
                 android:background="#ffffff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:minLines="1" />
+                android:minLines="1"
+                android:id="@+id/nameText" />
         </LinearLayout>
 
         <LinearLayout
@@ -124,7 +115,8 @@
                     android:background="#ffffff"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:minLines="1" />
+                    android:minLines="1"
+                    android:id="@+id/rateText" />
             </LinearLayout>
 
             <LinearLayout
@@ -136,7 +128,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="BITRATE"
+                    android:text="RESOLUTION"
                     android:layout_marginBottom="10dp" />
 
                 <EditText
@@ -145,7 +137,8 @@
                     android:background="#ffffff"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:minLines="1" />
+                    android:minLines="1"
+                    android:id="@+id/resolutionText" />
             </LinearLayout>
         </LinearLayout>
 
@@ -167,7 +160,6 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingRightt="5dp"
                     android:orientation="vertical"
                     android:layout_weight="0.5"
                     android:paddingRight="5dp">
@@ -180,7 +172,9 @@
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/check_visuals" />
+                        android:background="@drawable/check_visuals"
+                        android:id="@+id/audioCheck"
+                        android:clickable="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -200,7 +194,9 @@
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/check_visuals" />
+                        android:background="@drawable/check_visuals"
+                        android:id="@+id/videoCheck"
+                        android:clickable="true" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -220,7 +216,9 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/check_visuals" />
+                    android:background="@drawable/check_visuals"
+                    android:id="@+id/adaptiveCheck"
+                    android:clickable="true" />
             </LinearLayout>
 
         </LinearLayout>
@@ -239,7 +237,9 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/check_visuals" />
+                android:background="@drawable/check_visuals"
+                android:id="@+id/debugCheck"
+                android:clickable="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -259,7 +259,8 @@
                     android:text="BACK"
                     android:background="#00ffffff"
                     android:textStyle="bold"
-                    android:textColor="#e31900" />
+                    android:textColor="#e31900"
+                    android:id="@+id/backBtn" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -273,7 +274,8 @@
                     android:text="PUBLISH"
                     android:background="#00ffffff"
                     android:textStyle="bold"
-                    android:textColor="#e31900" />
+                    android:textColor="#e31900"
+                    android:id="@+id/submitBtn" />
             </RelativeLayout>
         </LinearLayout>
 

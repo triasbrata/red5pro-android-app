@@ -16,7 +16,7 @@
         android:scaleY="1"
         />
 
-    <SurfaceView
+    <com.red5pro.streaming.view.R5VideoView
         android:layout_width="150dp"
         android:layout_height="200dp"
         android:layout_above="@+id/control_bar"

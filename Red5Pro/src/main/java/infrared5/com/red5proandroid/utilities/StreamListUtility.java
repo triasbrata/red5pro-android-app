@@ -4,16 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import infrared5.com.red5proandroid.R;
@@ -87,7 +85,7 @@ public class StreamListUtility extends Activity {
     private void makeCall(){
         configure();
 
-        final String url = "http://" + config.host + ":5080/" + config.app + "/streams.jsp";
+        final String urlStr = "http://" + config.host + ":5080/" + config.app + "/streams.jsp";
 
         if(callThread != null) {
             callThread.interrupt();
@@ -97,15 +95,23 @@ public class StreamListUtility extends Activity {
             @Override
             public void run() {
                 try {
-                    HttpClient httpClient = new DefaultHttpClient();
-                    HttpResponse response = httpClient.execute(new HttpGet(url));
-                    StatusLine statusLine = response.getStatusLine();
-                    if (statusLine.getStatusCode() == HttpStatus.SC_OK && !Thread.interrupted()) {
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        response.getEntity().writeTo(out);
-                        String responseString = out.toString();
-                        out.close();
+                    URL url = new URL(urlStr);
+                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                    String responseString = "error: somehow string not assigned to?";
+                    try {
+                        BufferedInputStream in;
+                        if (urlConnection.getResponseCode() == 200 && !Thread.interrupted()) {
+                            in = new BufferedInputStream(urlConnection.getInputStream());
+                            responseString = readStream(in);
+                        } else {
+                            in = new BufferedInputStream(urlConnection.getErrorStream());
+                            responseString = "error: http issue - " + readStream(in);
+                        }
+                    } finally {
+                        urlConnection.disconnect();
+                    }
 
+                    if( !responseString.startsWith("error") && !Thread.interrupted()) {
                         JSONArray list = new JSONArray(responseString);
 
                         _liveStreams.clear();
@@ -115,8 +121,11 @@ public class StreamListUtility extends Activity {
                                 _liveStreams.add(obj.getString("name"));
                         }
                     }
+                    else if(!Thread.interrupted()){
+                        System.out.println(responseString);
+                    }
 
-                    if(finishCall != null)
+                    if(finishCall != null && !Thread.interrupted())
                         finishCall.run();
 
                     if(!Thread.interrupted())
@@ -131,5 +140,22 @@ public class StreamListUtility extends Activity {
             }
         });
         callThread.start();
+    }
+
+    private String readStream( BufferedInputStream in ) {
+
+        StringBuffer total = new StringBuffer();
+        String line;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            while ((line = br.readLine()) != null) {
+                total.append(line);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return "error: read issue";
+        }
+
+        return total.toString();
     }
 }

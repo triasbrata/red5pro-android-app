@@ -10,15 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="4"
-        android:background="#969696"
+        android:background="#c8c8c8"
         android:id="@+id/content_frame"
         tools:context=".settings.SettingsDialogFragment"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -32,42 +31,33 @@
                 android:padding="10dp" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="STREAM NAME"
-                android:id="@+id/textView4"
-                android:layout_alignParentTop="true"
-                android:layout_alignLeft="@+id/publishText"
-                android:layout_alignStart="@+id/publishText"
-                android:paddingTop="10dp" />
+                android:layout_marginBottom="5dp"
+                android:id="@+id/textView5" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:text="stream1"
+                android:layout_marginBottom="10dp"
                 android:id="@+id/publishText"
-                android:background="#ffffff"
-                android:layout_below="@+id/textView4"/>
+                android:background="#ffffff" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CONNECT TO"
-                android:id="@+id/textView5"
-                android:layout_alignLeft="@+id/publishText"
-                android:layout_below="@+id/publishText"
-                android:paddingTop="10dp" />
+                android:layout_marginBottom="10dp"
+                android:id="@+id/textView6" />
 
             <fragment
                 android:name="infrared5.com.red5proandroid.utilities.SubscribeList"
@@ -77,42 +67,41 @@
                 android:layout_alignLeft="@+id/textView5"
                 android:layout_below="@+id/textView5"
                 tools:layout="@android:layout/list_content" />
-
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0 Streams"
                 android:id="@+id/StreamNum"
-                android:layout_alignLeft="@+id/streamList"
-                android:layout_below="@+id/streamList" />
+                android:text="0 STREAMS"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subscribe"
-                android:id="@+id/Subscribe"
-                android:textColor="#ffe30a00"
-                android:textStyle="bold"
-                android:layout_below="@+id/streamList"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Back"
-                android:id="@+id/Back"
-                android:textColor="#ffe30a00"
-                android:layout_below="@+id/StreamNum"
-                android:layout_alignLeft="@+id/StreamNum"
-                android:layout_alignStart="@+id/StreamNum"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"></RelativeLayout>
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="horizontal">
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="left|center_vertical"
+                    android:text="BACK"
+                    android:background="#00ffffff"
+                    android:textStyle="bold"
+                    android:textColor="#e31900"
+                    android:id="@+id/Back" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical|right"
+                    android:text="SUBSCRIBE"
+                    android:background="#00ffffff"
+                    android:textStyle="bold"
+                    android:textColor="#e31900"
+                    android:id="@+id/submit" />
+        </LinearLayout>
     </LinearLayout>
 
     <fragment
