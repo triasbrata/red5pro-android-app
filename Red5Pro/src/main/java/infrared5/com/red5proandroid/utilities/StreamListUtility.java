@@ -102,10 +102,18 @@ public class StreamListUtility extends Activity {
                         BufferedInputStream in;
                         if (urlConnection.getResponseCode() == 200 && !Thread.interrupted()) {
                             in = new BufferedInputStream(urlConnection.getInputStream());
-                            responseString = readStream(in);
+//                            responseString = readStream(in);
+                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                            StringBuilder stringBuilder = new StringBuilder();
+                            String line;
+                            while ((line = bufferedReader.readLine()) != null) {
+                                stringBuilder.append(line);
+                            }
+                            responseString = stringBuilder.toString().replaceAll("\\s+", "");
+                            bufferedReader.close();
+                            System.out.println("retrieved stream list: " + responseString);
                         } else {
-                            in = new BufferedInputStream(urlConnection.getErrorStream());
-                            responseString = "error: http issue - " + readStream(in);
+                            responseString = "error: http issue, response code - " + urlConnection.getResponseCode();
                         }
                     } finally {
                         urlConnection.disconnect();

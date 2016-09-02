@@ -112,7 +112,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         streamList = (SubscribeList) getFragmentManager().findFragmentById(R.id.streamList);
         streamList.mCallbacks = this;
 
-        final DrawerLayout drawer = (DrawerLayout) v;
+        final DrawerLayout drawer = (DrawerLayout) flipper.getCurrentView();
 
         findViewById(R.id.slideNavBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,13 +239,13 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
             streamList.mCallbacks = null;
         }
 
-        if( camera != null ){
-            try{
-                camera.release();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
+//        if( camera != null ){
+//            try{
+//                camera.release();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
 
         super.onDestroy();
     }

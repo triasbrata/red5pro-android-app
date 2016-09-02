@@ -368,7 +368,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
             //assign the surface to show the camera output
             if(this.surfaceForCamera == null)
-                this.surfaceForCamera = (R5VideoView) findViewById(R.id.video);
+                this.surfaceForCamera = (R5VideoView) findViewById(R.id.publishView);
             this.surfaceForCamera.attachStream(stream);
 //            stream.setView((SurfaceView) findViewById(R.id.surfaceView));
 
@@ -383,9 +383,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 //                    pW=320;
 //                    pH=240;
 //                }
-                Camera.Parameters parameters = camera.getParameters();
-                parameters.setPreviewSize(pW, pH);
-                camera.setParameters(parameters);
+//                Camera.Parameters parameters = camera.getParameters();
+//                parameters.setPreviewSize(pW, pH);
+//                camera.setParameters(parameters);
                 r5Cam = new R5Camera(camera,pW,pH);
                 r5Cam.setBitrate(Publish.config.bitrate);
             }
