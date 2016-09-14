@@ -289,7 +289,7 @@ public class SettingsDialogFragment extends Fragment {
         settingsSubView = null;
         switch (state) {
             case SUBSCRIBE:
-                settingsSubView = inflater.inflate(R.layout.activity_settings_subscribe, null, false);
+                settingsSubView = View.inflate(inflater.getContext(), R.layout.activity_settings_subscribe, null);
                 advancedSubView = inflater.inflate(R.layout.activity_settings_subscribe_advanced, null, false);
                 break;
             case PUBLISH:
