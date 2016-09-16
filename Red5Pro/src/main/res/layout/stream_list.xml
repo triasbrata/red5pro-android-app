@@ -28,7 +28,8 @@
                 android:layout_alignParentStart="true"
                 android:src="@drawable/menu"
                 android:layout_margin="5dp"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:clickable="true" />
         </RelativeLayout>
 
         <LinearLayout
@@ -100,7 +101,10 @@
                     android:background="#00ffffff"
                     android:textStyle="bold"
                     android:textColor="#e31900"
-                    android:id="@+id/submit" />
+                    android:id="@+id/submit"
+                    android:enabled="true"
+                    android:clickable="true"
+                    android:contextClickable="false" />
         </LinearLayout>
     </LinearLayout>
 

@@ -7,8 +7,8 @@
     tools:context="infrared5.com.red5proandroid.twoway.TwoWay"
     style="@style/StandardView">
 
-    <SurfaceView
-        android:id="@+id/surfaceView"
+    <com.red5pro.streaming.view.R5VideoView
+        android:id="@+id/subscribeView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"

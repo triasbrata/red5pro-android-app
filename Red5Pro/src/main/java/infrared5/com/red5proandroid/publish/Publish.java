@@ -284,8 +284,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
     private void stopCamera() {
         if(camera != null) {
-            SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
-            sufi.getHolder().removeCallback(this);
+//            SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
+//            sufi.getHolder().removeCallback(this);
             sizes.clear();
 
             camera.stopPreview();

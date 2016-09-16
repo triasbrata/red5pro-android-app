@@ -25,7 +25,7 @@ public class StreamListUtility extends Activity {
     public static PublishStreamConfig config = null;
     public static ArrayList<String> _liveStreams;
     public static float _loopDelay = 2.5f;
-    public static Runnable finishCall;
+    public Runnable finishCall;
 
     private Thread callThread;
     private static StreamListUtility _instance;
@@ -38,7 +38,7 @@ public class StreamListUtility extends Activity {
                 _liveStreams = new ArrayList<String>();
             }
         }
-        if(ctx != null){
+        if(ctx != null && _instance.getBaseContext() == null){
             _instance.attachBaseContext(ctx);
         }
         return _instance;
@@ -60,8 +60,9 @@ public class StreamListUtility extends Activity {
         config.name = preferences.getString(getStringResource(R.string.preference_name), getStringResource(R.string.preference_default_name));
     }
 
-    public void callWithRunnable( Runnable block ){
+    public void callWithRunnable( final Runnable block ){
         finishCall = block;
+
         makeCall();
     }
 
@@ -111,11 +112,12 @@ public class StreamListUtility extends Activity {
                             }
                             responseString = stringBuilder.toString().replaceAll("\\s+", "");
                             bufferedReader.close();
-                            System.out.println("retrieved stream list: " + responseString);
+//                            System.out.println("retrieved stream list: " + responseString);
                         } else {
                             responseString = "error: http issue, response code - " + urlConnection.getResponseCode();
                         }
-                    } finally {
+                    } catch (Exception e){
+                    }finally {
                         urlConnection.disconnect();
                     }
 
@@ -133,15 +135,13 @@ public class StreamListUtility extends Activity {
                         System.out.println(responseString);
                     }
 
-                    if(finishCall != null && !Thread.interrupted())
-                        finishCall.run();
+                    if (!Thread.interrupted()) {
+                        if(finishCall != null)
+                            finishCall.run();
 
-                    if(!Thread.interrupted())
                         Thread.sleep((long) (_loopDelay * 1000));
-
-                    if(!Thread.interrupted())
                         makeCall();
-
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }

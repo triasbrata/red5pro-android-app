@@ -54,8 +54,8 @@ public class Preview extends Activity implements SurfaceHolder.Callback,View.OnC
         if(camera==null){
         camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
         camera.setDisplayOrientation(90);
-        SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
-        sufi.getHolder().addCallback(this);
+//        SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
+//        sufi.getHolder().addCallback(this);
         }
     }
 

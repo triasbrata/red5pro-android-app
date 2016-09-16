@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,13 +56,10 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         View twView = View.inflate(this, R.layout.activity_two_way, null);
         flipper.addView(twView);
         //stream list
-        flipper.addView(View.inflate(this, R.layout.stream_list, null));
+        View listView = View.inflate(this, R.layout.stream_list, null);
+        flipper.addView(listView);
 
         flipper.setDisplayedChild(0);
-
-        //don't have a publish settings screen for now?
-        //go straight to choosing the stream to subscribe to
-        //goToStreamList();
 
         camera = Camera.open(cameraSelection);
         Camera.getCameraInfo(cameraSelection, cameraInfo);
@@ -92,8 +90,15 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     protected TextView subButton;
     protected SubscribeList streamList;
     protected String subName = "";
+    protected Thread updateThread;
+    protected boolean onList = false;
 
     protected void goToStreamList(){
+
+        if(onList)
+            return;
+
+        onList = true;
 
         configure();
         //publish while selecting stream
@@ -101,71 +106,89 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         flipper.setDisplayedChild(1);
 
-        final View v =findViewById(android.R.id.content);
-        v.setKeepScreenOn(true);
+        final TwoWay thisParent = this;
 
-        TextView streamName = (TextView)findViewById(R.id.publishText);
-        streamName.setText(config.name);
-
-        streamNum = (TextView) findViewById(R.id.StreamNum);
-
-        streamList = (SubscribeList) getFragmentManager().findFragmentById(R.id.streamList);
-        streamList.mCallbacks = this;
-
-        final DrawerLayout drawer = (DrawerLayout) flipper.getCurrentView();
-
-        findViewById(R.id.slideNavBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawer.openDrawer(Gravity.LEFT);
-            }
-        });
-
-        v.findViewById(R.id.content_frame).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(drawer.isDrawerOpen(Gravity.LEFT))
-                    drawer.closeDrawer(Gravity.LEFT);
-            }
-        });
-
-        TextView backBtn = (TextView) findViewById(R.id.Back);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StreamListUtility.get_instance().clearAndDisconnect();
-                streamList.mCallbacks = null;
-
-                //Go back to the settings page. Either by flipping back, or going back to the previous activity
-//                flipper.setDisplayedChild(0);
-                if(stream != null) {
-                    stream.stop();
-                    stream = null;
-                }
-
-                onBackPressed();
-            }
-        });
-
-        //Subscribe hit
-        subButton = (TextView) findViewById(R.id.submit);
-        subButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(subName.isEmpty())
-                    return;
-
-                goToStreamView();
-            }
-        });
-
-        StreamListUtility util = StreamListUtility.get_instance(this);
-        util.callWithRunnable(new Runnable() {
+        //Delay all of these so that the publish call doesn't kill the runnables
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                UpdateStreamList();
+
+                try{
+                    Thread.sleep(500);
+                }catch (Exception e){}
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        final View v =findViewById(android.R.id.content);
+                        v.setKeepScreenOn(true);
+
+                        TextView streamName = (TextView)findViewById(R.id.publishText);
+                        streamName.setText(config.name);
+
+                        streamNum = (TextView) findViewById(R.id.StreamNum);
+
+                        streamList = (SubscribeList) getFragmentManager().findFragmentById(R.id.streamList);
+                        streamList.mCallbacks = thisParent;
+
+                        final DrawerLayout drawer = (DrawerLayout) flipper.getCurrentView();
+
+                        findViewById(R.id.slideNavBtn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                drawer.openDrawer(Gravity.LEFT);
+                            }
+                        });
+
+                        TextView backBtn = (TextView) findViewById(R.id.Back);
+                        backBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                StreamListUtility.get_instance().clearAndDisconnect();
+                                if (updateThread != null) {
+                                    updateThread.interrupt();
+                                    updateThread = null;
+                                }
+                                streamList.mCallbacks = null;
+
+                                //Go back to the settings page. Either by flipping back, or going back to the previous activity
+                                flipper.setDisplayedChild(0);
+                                if (stream != null) {
+                                    stream.stop();
+                                    stream = null;
+                                }
+                                onBackPressed();
+                            }
+                        });
+
+                        //Subscribe hit
+                        subButton = (Button) findViewById(R.id.submit);
+                        subButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                System.out.println("moving on? " + subName.isEmpty());
+
+                                if (subName.isEmpty())
+                                    return;
+
+                                goToStreamView();
+                            }
+                        });
+
+                        StreamListUtility util = StreamListUtility.get_instance(thisParent);
+                        util.callWithRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                UpdateStreamList();
+                            }
+                        });
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     protected R5Stream subStream;
@@ -173,6 +196,10 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     protected void goToStreamView(){
 
         StreamListUtility.get_instance().clearAndDisconnect();
+        if(updateThread != null) {
+            updateThread.interrupt();
+            updateThread = null;
+        }
         streamList.mCallbacks = null;
 
         flipper.setDisplayedChild(0);
@@ -193,7 +220,8 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         //create the subscriber and connect it
         subStream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));
-        subStream.setView((SurfaceView) findViewById(R.id.surfaceView));
+        ((R5VideoView) findViewById(R.id.subscribeView)).attachStream(subStream);
+//        subStream.setView();
         subStream.play( subName );
     }
 
@@ -222,6 +250,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
     @Override
     public void onItemSelected(int id) {
+
         subName = StreamListUtility._liveStreams.get(id);
 
         subButton.setAlpha(1.0f);
@@ -231,6 +260,10 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     protected void onDestroy() {
 
         StreamListUtility.get_instance().clearAndDisconnect();
+        if(updateThread != null) {
+            updateThread.interrupt();
+            updateThread = null;
+        }
 
         if(subStream != null){
             subStream.stop();
@@ -238,14 +271,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         if(streamList != null){
             streamList.mCallbacks = null;
         }
-
-//        if( camera != null ){
-//            try{
-//                camera.release();
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
 
         super.onDestroy();
     }

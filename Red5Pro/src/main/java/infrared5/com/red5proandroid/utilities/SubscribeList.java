@@ -44,14 +44,17 @@ public class SubscribeList extends ListFragment {
             dataAdapter.notifyDataSetChanged();
         }
         else{
-            dataAdapter = new ArrayAdapter<String>(
-                    getActivity(),
-                    android.R.layout.simple_list_item_1,
-                    android.R.id.text1,
-                    StreamListUtility._liveStreams
-            );
+            try {
+                dataAdapter = new ArrayAdapter<String>(
+                        getActivity(),
+                        android.R.layout.simple_list_item_1,
+                        android.R.id.text1,
+                        StreamListUtility._liveStreams
+                );
 
-            setListAdapter(dataAdapter);
+                setListAdapter(dataAdapter);
+            }
+            catch (Exception e){}
         }
     }
 
