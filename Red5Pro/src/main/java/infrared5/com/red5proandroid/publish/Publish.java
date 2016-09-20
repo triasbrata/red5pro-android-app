@@ -42,7 +42,7 @@ import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 public class Publish extends Activity implements SurfaceHolder.Callback, View.OnClickListener,
         ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
 
-    protected int cameraSelection = 0;
+    protected int cameraSelection = 1;
     protected int cameraOrientation = 0;
     protected Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
     protected List<Camera.Size> sizes = new ArrayList<Camera.Size>();
