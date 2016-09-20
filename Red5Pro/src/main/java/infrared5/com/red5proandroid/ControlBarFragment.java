@@ -28,41 +28,7 @@ public class ControlBarFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_control_bar, container, false);
 
-        ImageButton button = (ImageButton) v.findViewById(R.id.btnHome);
-        if (button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
-
-        button = (ImageButton) v.findViewById(R.id.btnPublish);
-        if (button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(navigate(AppState.PUBLISH)) {
-                        mListener.onStateSelection(AppState.PUBLISH);
-                    }
-                }
-            });
-        }
-
-        button = (ImageButton) v.findViewById(R.id.btnSubscribe);
-        if(button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(navigate(AppState.SUBSCRIBE)) {
-                        mListener.onStateSelection(AppState.SUBSCRIBE);
-                    }
-                }
-            });
-        }
-
-        button = (ImageButton) v.findViewById(R.id.btnSettings);
+        ImageButton button = (ImageButton) v.findViewById(R.id.btnSettings);
         if(button != null) {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,6 +37,24 @@ public class ControlBarFragment extends Fragment {
                 }
             });
         }
+
+//        button = (ImageButton) v.findViewById(R.id.btnRecord);
+//        if(button != null) {
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                }
+//            });
+//        }
+//
+//        button = (ImageButton) v.findViewById(R.id.btnCamera);
+//        if(button != null) {
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                }
+//            });
+//        }
         return v;
     }
 
@@ -121,43 +105,42 @@ public class ControlBarFragment extends Fragment {
             return false;
         }
 
-        int id = 0;
-        int drawable = 0;
-        switch (state) {
-            case PUBLISH:
-                id = R.id.btnPublish;
-                drawable = R.drawable.publish_grey;
-                unselect(R.id.btnSubscribe, R.drawable.subscribe);
-                break;
-            case SUBSCRIBE:
-                id = R.id.btnSubscribe;
-                drawable = R.drawable.subscribe_grey;
-                unselect(R.id.btnPublish, R.drawable.publish);
-                break;
-        }
-
-        ImageButton myButton = (ImageButton) getActivity().findViewById(id);
-        if (myButton != null) {
-            myButton.setImageResource(drawable);
-            myButton.invalidate();
-        }
+//        int id = 0;
+//        int drawable = 0;
+//        switch (state) {
+//            case PUBLISH:
+//                id = R.id.btnPublish;
+//                drawable = R.drawable.publish_grey;
+//                unselect(R.id.btnSubscribe, R.drawable.subscribe);
+//                break;
+//            case SUBSCRIBE:
+//                id = R.id.btnSubscribe;
+//                drawable = R.drawable.subscribe_grey;
+//                unselect(R.id.btnPublish, R.drawable.publish);
+//                break;
+//        }
+//
+//        ImageButton myButton = (ImageButton) getActivity().findViewById(id);
+//        if (myButton != null) {
+//            myButton.setImageResource(drawable);
+//            myButton.invalidate();
+//        }
         currentState = state;
         return true;
     }
 
     public void displayPublishControls(boolean show) {
-        ImageButton recordButton = (ImageButton) getActivity().findViewById(R.id.btnRecord);
+//        ImageButton recordButton = (ImageButton) getActivity().findViewById(R.id.btnRecord);
         ImageButton cameraButton = (ImageButton) getActivity().findViewById(R.id.btnCamera);
-        if(recordButton != null) {
-            recordButton.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
+//        if(recordButton != null) {
+//            recordButton.setVisibility(show ? View.VISIBLE : View.GONE);
+//        }
         if(cameraButton != null) {
             cameraButton.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
     public interface OnFragmentInteractionListener {
-        public void onStateSelection(AppState state);
         public void onSettingsClick();
     }
 

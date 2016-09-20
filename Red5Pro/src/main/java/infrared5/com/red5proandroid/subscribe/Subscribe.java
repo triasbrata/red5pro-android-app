@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,7 @@ import infrared5.com.red5proandroid.R;
 import infrared5.com.red5proandroid.publish.PublishStreamConfig;
 import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 
-public class Subscribe extends Activity implements ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
+public class Subscribe extends Activity implements ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     PublishStreamConfig streamParams = new PublishStreamConfig();
     R5Stream stream;
@@ -81,32 +82,34 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         ControlBarFragment controlBar = (ControlBarFragment)getFragmentManager().findFragmentById(R.id.control_bar);
         controlBar.setSelection(AppState.SUBSCRIBE);
         controlBar.displayPublishControls(false);
+//
+//        View playPauseButton = findViewById(R.id.btnSubscribePlayPause);
+//        playPauseButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toggleStream();
+//            }
+//        });
 
-        View playPauseButton = findViewById(R.id.btnSubscribePlayPause);
-        playPauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleStream();
-            }
-        });
-
+        ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
+        rButton.setOnClickListener(this);
     }
 
-    private void toggleStream() {
-        if(isStreaming) {
-            stopStream();
-        }
-        else {
-            startStream();
-        }
-    }
+//    private void toggleStream() {
+//        if(isStreaming) {
+//            stopStream();
+//        }
+//        else {
+//            startStream();
+//        }
+//    }
 
     private void setStreaming(boolean ok) {
-        ViewGroup playPauseButton = (ViewGroup) findViewById(R.id.btnSubscribePlayPause);
-        TextView textView = (TextView) playPauseButton.getChildAt(0);
+//        ViewGroup playPauseButton = (ViewGroup) findViewById(R.id.btnSubscribePlayPause);
+//        TextView textView = (TextView) playPauseButton.getChildAt(0);
 
         isStreaming = ok;
-        textView.setText(isStreaming ? "Stop Stream" : "Start Stream");
+//        textView.setText(isStreaming ? "Stop Stream" : "Start Stream");
     }
 
     private void startStream() {
@@ -153,6 +156,21 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         stream.play(streamParams.name);
         //update the state for the toggle button
         setStreaming(true);
+
+    }
+
+    public void onClick(View view) {
+        ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
+
+        if(isStreaming) {
+            stopStream();
+            rButton.setImageResource(R.drawable.empty_red);
+
+        }
+        else {
+            startStream();
+            rButton.setImageResource(R.drawable.empty);
+        }
 
     }
 
