@@ -189,6 +189,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
                                 UpdateStreamList();
                             }
                         });
+                        util.ignoreName = config.name;
                     }
                 });
             }

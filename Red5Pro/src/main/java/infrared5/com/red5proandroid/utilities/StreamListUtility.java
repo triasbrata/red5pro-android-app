@@ -25,6 +25,8 @@ public class StreamListUtility extends Activity {
     public static PublishStreamConfig config = null;
     public static ArrayList<String> _liveStreams;
     public static float _loopDelay = 2.5f;
+
+    public String ignoreName;
     public Runnable finishCall;
 
     private Thread callThread;
@@ -127,7 +129,7 @@ public class StreamListUtility extends Activity {
                         _liveStreams.clear();
                         for (int i = 0; i < list.length(); i++){
                             JSONObject obj = list.getJSONObject(i);
-                            if(!obj.getString("name").equals(config.name))
+                            if(ignoreName == null || !obj.getString("name").equals(ignoreName))
                                 _liveStreams.add(obj.getString("name"));
                         }
                     }
@@ -140,8 +142,11 @@ public class StreamListUtility extends Activity {
                             finishCall.run();
 
                         Thread.sleep((long) (_loopDelay * 1000));
-                        makeCall();
                     }
+
+                    if (!Thread.interrupted())
+                        makeCall();
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
