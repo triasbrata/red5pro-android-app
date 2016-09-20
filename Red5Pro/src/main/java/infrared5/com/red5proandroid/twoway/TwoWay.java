@@ -68,6 +68,10 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         sizes=camera.getParameters().getSupportedPreviewSizes();
 
         surfaceForCamera = (R5VideoView) twView.findViewById(R.id.video);
+
+        ImageButton rButton = (ImageButton) twView.findViewById(R.id.btnRecord);
+        rButton.setImageResource(R.drawable.empty);
+
         configure();
     }
 
@@ -246,6 +250,21 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
                 streamNum.setText(StreamListUtility._liveStreams.size() + "Streams");
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if(view.getId() == R.id.btnRecord) {
+            if(isPublishing) {
+                stopPublishing();
+                onBackPressed();
+            }
+        }
+        else if(view.getId() == R.id.btnCamera) {
+            toggleCamera();
+        }
+
     }
 
     @Override

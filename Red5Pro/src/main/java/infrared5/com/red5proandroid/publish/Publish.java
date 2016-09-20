@@ -218,7 +218,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         }
     }
 
-    private void toggleCamera() {
+    protected void toggleCamera() {
         cameraSelection = (cameraSelection + 1) % 2;
         try {
             Camera.getCameraInfo(cameraSelection, cameraInfo);
@@ -426,7 +426,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         }
     }
 
-    private void stopPublishing() {
+    protected void stopPublishing() {
         if(stream!=null) {
             stream.stop();
         }
