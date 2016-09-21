@@ -132,7 +132,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         //activate the camera
         Camera.getCameraInfo(cameraSelection, cameraInfo);
         setOrientationMod();
-        showCamera();
+//        showCamera();
 
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
         rButton.setOnClickListener(this);
@@ -140,6 +140,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
         cameraButton.setOnClickListener(this);
 
+        configureStream();
     }
 
     @Override
@@ -266,25 +267,21 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
             sizes=camera.getParameters().getSupportedPreviewSizes();
 
-//            R5VideoView sufi;
-//            if(surfaceForCamera == null)
-//                sufi= (R5VideoView) findViewById(R.id.video);
-//            else
-//                sufi = surfaceForCamera;
+            SurfaceView sufi = (SurfaceView) findViewById(R.id.publishView);
 
-//            if(sufi.getHolder().isCreating()) {
-//                sufi.getHolder().addCallback(this);
-//            }
-//            else {
-//                sufi.getHolder().addCallback(this);
-//                this.surfaceCreated(sufi.getHolder());
-//            }
+            if(sufi.getHolder().isCreating()) {
+                sufi.getHolder().addCallback(this);
+            }
+            else {
+                sufi.getHolder().addCallback(this);
+                this.surfaceCreated(sufi.getHolder());
+            }
         }
     }
 
     private void stopCamera() {
         if(camera != null) {
-//            SurfaceView sufi = (SurfaceView) findViewById(R.id.surfaceView);
+//            SurfaceView sufi = (SurfaceView) findViewById(R.id.previewView);
 //            sufi.getHolder().removeCallback(this);
             sizes.clear();
 
@@ -301,84 +298,102 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 stream.stop();
             }
 
-            Handler mHand = new Handler();
+            configureStream();
 
-            final R5Configuration configuration = new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 0.5f);
-            stream = new R5Stream(new R5Connection(configuration));
+            beginStream();
+        }
+    }
 
-            stream.setLogLevel(R5Stream.LOG_LEVEL_DEBUG);
+    protected void beginStream(){
 
-            stream.connection.addListener(new R5ConnectionListener() {
-                @Override
-                public void onConnectionEvent(R5ConnectionEvent event) {
-                    Log.d("publish","connection event code "+event.value()+"\n");
-                    switch(event.value()){
-                        case 0://open
-                            System.out.println("Connection Listener - Open");
-                            break;
-                        case 1://close
-                            System.out.println("Connection Listener - Close");
-                            break;
-                        case 2://error
-                            System.out.println("Connection Listener - Error: " + event.message);
-                            break;
+        camera.stopPreview();
 
-                    }
+        isPublishing = true;
+        stream.publish(Publish.config.name, R5Stream.RecordType.Live);
+
+        camera.startPreview();
+    }
+
+    protected void configureStream(){
+
+        Handler mHand = new Handler();
+
+        final R5Configuration configuration = new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 0.5f);
+        stream = new R5Stream(new R5Connection(configuration));
+
+        stream.setLogLevel(R5Stream.LOG_LEVEL_DEBUG);
+
+        stream.connection.addListener(new R5ConnectionListener() {
+            @Override
+            public void onConnectionEvent(R5ConnectionEvent event) {
+                Log.d("publish","connection event code "+event.value()+"\n");
+                switch(event.value()){
+                    case 0://open
+                        System.out.println("Connection Listener - Open");
+                        break;
+                    case 1://close
+                        System.out.println("Connection Listener - Close");
+                        break;
+                    case 2://error
+                        System.out.println("Connection Listener - Error: " + event.message);
+                        break;
+
                 }
-            });
-
-            stream.setListener(new R5ConnectionListener() {
-                @Override
-                public void onConnectionEvent(R5ConnectionEvent event) {
-                    switch (event) {
-                        case CONNECTED:
-                            System.out.println("Stream Listener - Connected");
-                            break;
-                        case DISCONNECTED:
-                            System.out.println("Stream Listener - Disconnected");
-                            break;
-                        case START_STREAMING:
-                            System.out.println("Stream Listener - Started Streaming");
-                            break;
-                        case STOP_STREAMING:
-                            System.out.println("Stream Listener - Stopped Streaming");
-                            break;
-                        case CLOSE:
-                            System.out.println("Stream Listener - Close");
-                            break;
-                        case TIMEOUT:
-                            System.out.println("Stream Listener - Timeout");
-                            break;
-                        case ERROR:
-                            System.out.println("Stream Listener - Error: " + event.message);
-                            break;
-                    }
-                }
-            });
-
-            if(camera == null){
-                camera = Camera.open(cameraSelection);
-                Camera.getCameraInfo(cameraSelection, cameraInfo);
-                setOrientationMod();
-                camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
-                sizes=camera.getParameters().getSupportedPreviewSizes();
             }
+        });
 
-            camera.stopPreview();
+        stream.setListener(new R5ConnectionListener() {
+            @Override
+            public void onConnectionEvent(R5ConnectionEvent event) {
+                switch (event) {
+                    case CONNECTED:
+                        System.out.println("Stream Listener - Connected");
+                        break;
+                    case DISCONNECTED:
+                        System.out.println("Stream Listener - Disconnected");
+                        break;
+                    case START_STREAMING:
+                        System.out.println("Stream Listener - Started Streaming");
+                        break;
+                    case STOP_STREAMING:
+                        System.out.println("Stream Listener - Stopped Streaming");
+                        break;
+                    case CLOSE:
+                        System.out.println("Stream Listener - Close");
+                        break;
+                    case TIMEOUT:
+                        System.out.println("Stream Listener - Timeout");
+                        break;
+                    case ERROR:
+                        System.out.println("Stream Listener - Error: " + event.message);
+                        break;
+                }
+            }
+        });
 
-            //assign the surface to show the camera output
-            if(this.surfaceForCamera == null)
-                this.surfaceForCamera = (R5VideoView) findViewById(R.id.publishView);
-            this.surfaceForCamera.attachStream(stream);
+        if(camera == null){
+            camera = Camera.open(cameraSelection);
+            Camera.getCameraInfo(cameraSelection, cameraInfo);
+            setOrientationMod();
+            camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
+            sizes=camera.getParameters().getSupportedPreviewSizes();
+        }
+
+        camera.stopPreview();
+
+        //assign the surface to show the camera output
+        if(this.surfaceForCamera == null)
+            this.surfaceForCamera = (R5VideoView) findViewById(R.id.publishView);
+        this.surfaceForCamera.attachStream(stream);
 //            stream.setView((SurfaceView) findViewById(R.id.surfaceView));
 
-            //add the camera for streaming
-            if(selected_item != null) {
-                Log.d("publisher","selected_item "+selected_item);
-                String bits[] = selected_item.split("x");
-                int pW= Integer.valueOf(bits[0]);
-                int pH=  Integer.valueOf(bits[1]);
-                //I don't know why this code was added, looks like it overrides the default resolution selections?
+        //add the camera for streaming
+        if(selected_item != null) {
+            Log.d("publisher","selected_item "+selected_item);
+            String bits[] = selected_item.split("x");
+            int pW= Integer.valueOf(bits[0]);
+            int pH=  Integer.valueOf(bits[1]);
+            //I don't know why this code was added, looks like it overrides the default resolution selections?
 //                if((pW/2) %16 !=0){
 //                    pW=320;
 //                    pH=240;
@@ -386,44 +401,41 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 //                Camera.Parameters parameters = camera.getParameters();
 //                parameters.setPreviewSize(pW, pH);
 //                camera.setParameters(parameters);
-                r5Cam = new R5Camera(camera,pW,pH);
-                r5Cam.setBitrate(Publish.config.bitrate);
-            }
-            else {
-                Camera.Parameters parameters = camera.getParameters();
-                parameters.setPreviewSize(320, 240);
-
-                camera.setParameters(parameters);
-                r5Cam = new R5Camera(camera,320,240);
-                r5Cam.setBitrate(config.bitrate);
-            }
-
-            r5Cam.setOrientation(cameraOrientation);
-            r5Mic = new R5Microphone();
-
-            if(config.video) {
-                stream.attachCamera(r5Cam);
-            }
-
-            if(config.audio) {
-                stream.attachMic(r5Mic);
-            }
-
-            if (config.adaptiveBitrate) {
-                final R5AdaptiveBitrateController adaptiveBitrateController = new R5AdaptiveBitrateController();
-                adaptiveBitrateController.AttachStream(stream);
-
-                if (config.video) {
-//                    adaptiveBitrateController.requiresVideo = true;
-                }
-            }
-
-            this.surfaceForCamera.showDebugView(config.debug);
-
-            isPublishing = true;
-            stream.publish(Publish.config.name, R5Stream.RecordType.Live);
-            camera.startPreview();
+            r5Cam = new R5Camera(camera,pW,pH);
+            r5Cam.setBitrate(Publish.config.bitrate);
         }
+        else {
+            Camera.Parameters parameters = camera.getParameters();
+            parameters.setPreviewSize(320, 240);
+
+            camera.setParameters(parameters);
+            r5Cam = new R5Camera(camera,320,240);
+            r5Cam.setBitrate(config.bitrate);
+        }
+
+        r5Cam.setOrientation(cameraOrientation);
+        r5Mic = new R5Microphone();
+
+        if(config.video) {
+            stream.attachCamera(r5Cam);
+        }
+
+        if(config.audio) {
+            stream.attachMic(r5Mic);
+        }
+
+        if (config.adaptiveBitrate) {
+            final R5AdaptiveBitrateController adaptiveBitrateController = new R5AdaptiveBitrateController();
+            adaptiveBitrateController.AttachStream(stream);
+
+            if (config.video) {
+//                    adaptiveBitrateController.requiresVideo = true;
+            }
+        }
+
+        this.surfaceForCamera.showDebugView(config.debug);
+
+        camera.startPreview();
     }
 
     protected void stopPublishing() {
@@ -445,7 +457,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
             }
             else {
-                startPublishing();
+                beginStream();
                 rButton.setImageResource(R.drawable.empty);
                 cameraButton.setVisibility(View.GONE);
             }
