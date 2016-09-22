@@ -232,7 +232,10 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         setOrientationMod();
 
         stopCamera();
-        showCamera();
+//        showCamera();
+        setCamera();
+
+        camera.startPreview();
     }
 
     protected void setOrientationMod(){
@@ -371,6 +374,34 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             }
         });
 
+        setCamera();
+
+        r5Mic = new R5Microphone();
+
+        if(config.video) {
+            stream.attachCamera(r5Cam);
+        }
+
+        if(config.audio) {
+            stream.attachMic(r5Mic);
+        }
+
+        if (config.adaptiveBitrate) {
+            final R5AdaptiveBitrateController adaptiveBitrateController = new R5AdaptiveBitrateController();
+            adaptiveBitrateController.AttachStream(stream);
+
+            if (config.video) {
+//                    adaptiveBitrateController.requiresVideo = true;
+            }
+        }
+
+        this.surfaceForCamera.showDebugView(config.debug);
+
+        camera.startPreview();
+    }
+
+    protected void setCamera(){
+
         if(camera == null){
             camera = Camera.open(cameraSelection);
             Camera.getCameraInfo(cameraSelection, cameraInfo);
@@ -401,45 +432,32 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 //                Camera.Parameters parameters = camera.getParameters();
 //                parameters.setPreviewSize(pW, pH);
 //                camera.setParameters(parameters);
-            r5Cam = new R5Camera(camera,pW,pH);
-            r5Cam.setBitrate(Publish.config.bitrate);
+            if( r5Cam == null ) {
+                r5Cam = new R5Camera(camera, pW, pH);
+                r5Cam.setBitrate(Publish.config.bitrate);
+            }
+            else
+                r5Cam.setCamera(camera);
         }
         else {
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewSize(320, 240);
 
             camera.setParameters(parameters);
-            r5Cam = new R5Camera(camera,320,240);
-            r5Cam.setBitrate(config.bitrate);
+
+            if( r5Cam == null ) {
+                r5Cam = new R5Camera(camera, 320, 240);
+                r5Cam.setBitrate(config.bitrate);
+            }
+            else
+                r5Cam.setCamera(camera);
         }
 
         r5Cam.setOrientation(cameraOrientation);
-        r5Mic = new R5Microphone();
-
-        if(config.video) {
-            stream.attachCamera(r5Cam);
-        }
-
-        if(config.audio) {
-            stream.attachMic(r5Mic);
-        }
-
-        if (config.adaptiveBitrate) {
-            final R5AdaptiveBitrateController adaptiveBitrateController = new R5AdaptiveBitrateController();
-            adaptiveBitrateController.AttachStream(stream);
-
-            if (config.video) {
-//                    adaptiveBitrateController.requiresVideo = true;
-            }
-        }
-
-        this.surfaceForCamera.showDebugView(config.debug);
-
-        camera.startPreview();
     }
 
     protected void stopPublishing() {
-        if(stream!=null) {
+        if(stream!=null && isPublishing) {
             stream.stop();
         }
         isPublishing = false;
@@ -453,13 +471,13 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             if(isPublishing) {
                 stopPublishing();
                 rButton.setImageResource(R.drawable.empty_red);
-                cameraButton.setVisibility(View.VISIBLE);
+//                cameraButton.setVisibility(View.VISIBLE);
 
             }
             else {
                 beginStream();
                 rButton.setImageResource(R.drawable.empty);
-                cameraButton.setVisibility(View.GONE);
+//                cameraButton.setVisibility(View.GONE);
             }
         }
         else if(view.getId() == R.id.btnCamera) {
