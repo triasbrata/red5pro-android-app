@@ -164,7 +164,8 @@ public class SettingsDialogFragment extends Fragment {
 //            editor.putBoolean(getPreferenceValue(R.string.preference_adaptive_bitrate), cba.isChecked());
         }
         else {
-            editor.putString(getPreferenceValue(R.string.preference_name), subSelected);
+            if(subSelected != null)
+                editor.putString(getPreferenceValue(R.string.preference_name), subSelected);
         }
 
         editor.apply();
@@ -321,6 +322,7 @@ public class SettingsDialogFragment extends Fragment {
         v.findViewById(R.id.advanced).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveSettings(v);
                 switchToAdvanced(v.findViewById(R.id.settings_frame));
             }
         });
@@ -345,6 +347,7 @@ public class SettingsDialogFragment extends Fragment {
     }
 
     public void switchToAdvanced(View v){
+
         SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
 
         String val;
@@ -377,7 +380,7 @@ public class SettingsDialogFragment extends Fragment {
         }
         else {
             //name
-            val = preferences.getString(getPreferenceValue(R.string.preference_name), getResources().getString(R.string.preference_default_name));
+            val = preferences.getString(getPreferenceValue(R.string.preference_name), getPreferenceValue(R.string.preference_default_name));
             getField(advancedSubView, R.id.nameText).setText(subSelected != null ? subSelected : val);
         }
 
@@ -440,6 +443,8 @@ public class SettingsDialogFragment extends Fragment {
         if(!saveAdvancedSettings())
             return;
 
+
+
         if(state == AppState.PUBLISH)
             showUserSettings(settingsSubView);
         else{
@@ -447,7 +452,7 @@ public class SettingsDialogFragment extends Fragment {
             UpdateStreamList();
         }
 
-        RelativeLayout parent = (RelativeLayout)advancedSubView.getParent();
+        LinearLayout parent = (LinearLayout)advancedSubView.getParent();
         parent.removeView(advancedSubView);
         parent.addView(settingsSubView);
     }
@@ -462,10 +467,10 @@ public class SettingsDialogFragment extends Fragment {
         editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(getField(advancedSubView, R.id.portText).getText().toString()));
         //app
         editor.putString(getPreferenceValue(R.string.preference_app), getField(advancedSubView, R.id.appText).getText().toString());
+        //name
+        editor.putString(getPreferenceValue(R.string.preference_name), getField(advancedSubView, R.id.nameText).getText().toString());
 
         if( state == AppState.PUBLISH ) {
-            //name
-            editor.putString(getPreferenceValue(R.string.preference_name), getField(advancedSubView, R.id.nameText).getText().toString());
             //bitrate/resolution
             int baseBitrate = preferences.getInt(getPreferenceValue(R.string.preference_bitrate), getResources().getInteger(R.integer.preference_default_bitrate));
             int newBitrate = Integer.parseInt( getField(advancedSubView, R.id.rateText).getText().toString() );
@@ -496,6 +501,8 @@ public class SettingsDialogFragment extends Fragment {
                 Publish.selected_item = newResolution;
             }
         }
+
+        editor.apply();
 
         return true;
     }
