@@ -154,21 +154,4 @@ public class StreamListUtility extends Activity {
         });
         callThread.start();
     }
-
-    private String readStream( BufferedInputStream in ) {
-
-        StringBuffer total = new StringBuffer();
-        String line;
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            while ((line = br.readLine()) != null) {
-                total.append(line);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return "error: read issue";
-        }
-
-        return total.toString();
-    }
 }

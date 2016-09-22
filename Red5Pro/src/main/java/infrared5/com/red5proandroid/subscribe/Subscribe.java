@@ -167,14 +167,14 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
 
         if(isStreaming) {
-            stopStream();
-            rButton.setImageResource(R.drawable.empty_red);
-
+//            stopStream();
+//            rButton.setImageResource(R.drawable.empty_red);
+            onBackPressed();
         }
-        else {
-            startStream();
-            rButton.setImageResource(R.drawable.empty);
-        }
+//        else {
+//            startStream();
+//            rButton.setImageResource(R.drawable.empty);
+//        }
 
     }
 
