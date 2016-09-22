@@ -46,6 +46,8 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     public void onSettingsDialogClose() {
         configure();
+
+        startStream();
     }
 
     public String getStringResource(int id) {
@@ -93,6 +95,8 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
         rButton.setOnClickListener(this);
+
+        rButton.setImageResource(R.drawable.empty);
     }
 
 //    private void toggleStream() {
@@ -190,6 +194,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     private void openSettings() {
         try {
+            stopStream();
             SettingsDialogFragment newFragment = SettingsDialogFragment.newInstance(AppState.SUBSCRIBE);
             getFragmentManager().beginTransaction().add(R.id.settings_frame, newFragment).commit();
         }
