@@ -32,6 +32,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     PublishStreamConfig streamParams = new PublishStreamConfig();
     R5Stream stream;
+    SettingsDialogFragment settingsFragment;
 
     public boolean isStreaming = false;
 
@@ -46,7 +47,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     public void onSettingsDialogClose() {
         configure();
-
+        settingsFragment = null;
         startStream();
     }
 
@@ -195,8 +196,8 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
     private void openSettings() {
         try {
             stopStream();
-            SettingsDialogFragment newFragment = SettingsDialogFragment.newInstance(AppState.SUBSCRIBE);
-            getFragmentManager().beginTransaction().add(R.id.settings_frame, newFragment).commit();
+            settingsFragment = SettingsDialogFragment.newInstance(AppState.SUBSCRIBE);
+            getFragmentManager().beginTransaction().add(R.id.settings_frame, settingsFragment).commit();
         }
         catch(Exception e) {
             Log.i(TAG, "Can't open settings: " + e.getMessage());
@@ -207,6 +208,14 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.subscribe, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(settingsFragment == null || !settingsFragment.advancedOpen)
+            super.onBackPressed();
+        else
+            settingsFragment.forceReturnFromAdvanced();
     }
 
     @Override

@@ -40,6 +40,7 @@ public class SettingsDialogFragment extends Fragment {
     private String subSelected;
     public static int defaultResolution = 0;
     public static int bitRate = 1000;
+    public boolean advancedOpen;
 
     public static SettingsDialogFragment newInstance(AppState state) {
         SettingsDialogFragment fragment = new SettingsDialogFragment();
@@ -409,6 +410,8 @@ public class SettingsDialogFragment extends Fragment {
 
         ((LinearLayout)v).removeView(settingsSubView);
         ((LinearLayout)v).addView(advancedSubView);
+
+        advancedOpen = true;
     }
 
     public void buildCheckHandle( final int prefID, final int defaultID, final int viewID ){
@@ -443,7 +446,24 @@ public class SettingsDialogFragment extends Fragment {
         if(!saveAdvancedSettings())
             return;
 
+        advancedOpen = false;
 
+        if(state == AppState.PUBLISH)
+            showUserSettings(settingsSubView);
+        else{
+            subSelected = getField(advancedSubView, R.id.nameText).getText().toString();
+            UpdateStreamList();
+        }
+
+        LinearLayout parent = (LinearLayout)advancedSubView.getParent();
+        parent.removeView(advancedSubView);
+        parent.addView(settingsSubView);
+    }
+
+    public void forceReturnFromAdvanced(){
+        saveAdvancedSettings();
+
+        advancedOpen = false;
 
         if(state == AppState.PUBLISH)
             showUserSettings(settingsSubView);
@@ -486,11 +506,17 @@ public class SettingsDialogFragment extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                         getField(advancedSubView, R.id.resolutionText).setTextColor(Color.RED);
+
+                        editor.apply();
+
                         return false;
                     }
                     getField(advancedSubView, R.id.resolutionText).setTextColor(Color.BLACK);
                 } else {
                     getField(advancedSubView, R.id.resolutionText).setTextColor(Color.RED);
+
+                    editor.apply();
+
                     return false;
                 }
                 editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), 3);

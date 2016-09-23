@@ -90,6 +90,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     public void onSettingsDialogClose() {
+        dialogFragment = null;
         configure();
     }
 
@@ -504,5 +505,13 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {}
+
+    @Override
+    public void onBackPressed() {
+        if(dialogFragment == null || !dialogFragment.advancedOpen)
+            super.onBackPressed();
+        else
+            dialogFragment.forceReturnFromAdvanced();
+    }
 
 }
