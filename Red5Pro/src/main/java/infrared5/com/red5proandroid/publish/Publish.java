@@ -470,10 +470,10 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         if(view.getId() == R.id.btnRecord) {
             if(isPublishing) {
-                stopPublishing();
-                rButton.setImageResource(R.drawable.empty_red);
+//                stopPublishing();
+//                rButton.setImageResource(R.drawable.empty_red);
 //                cameraButton.setVisibility(View.VISIBLE);
-
+                onBackPressed();
             }
             else {
                 beginStream();

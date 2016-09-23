@@ -491,12 +491,13 @@ public class SettingsDialogFragment extends Fragment {
         editor.putString(getPreferenceValue(R.string.preference_name), getField(advancedSubView, R.id.nameText).getText().toString());
 
         if( state == AppState.PUBLISH ) {
+
             //bitrate/resolution
             int baseBitrate = preferences.getInt(getPreferenceValue(R.string.preference_bitrate), getResources().getInteger(R.integer.preference_default_bitrate));
             int newBitrate = Integer.parseInt( getField(advancedSubView, R.id.rateText).getText().toString() );
             String newResolution = getField(advancedSubView, R.id.resolutionText).getText().toString();
 
-            if(baseBitrate != newBitrate || Publish.selected_item != newResolution ) {
+            if(baseBitrate != newBitrate || Publish.selected_item.equalsIgnoreCase(newResolution) ) {
 
                 if (newResolution.contains("x")) {
                     String[] bits = newResolution.split("x");
