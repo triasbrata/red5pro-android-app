@@ -94,7 +94,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     protected TextView subButton;
     protected SubscribeList streamList;
     protected String subName = "";
-    protected Thread updateThread;
     protected boolean onList = false;
 
     protected void goToStreamList(){
@@ -151,19 +150,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
                             @Override
                             public void onClick(View view) {
 
-                                StreamListUtility.get_instance().clearAndDisconnect();
-                                if (updateThread != null) {
-                                    updateThread.interrupt();
-                                    updateThread = null;
-                                }
-                                streamList.mCallbacks = null;
-
-                                //Go back to the settings page. Either by flipping back, or going back to the previous activity
-                                flipper.setDisplayedChild(0);
-                                if (stream != null) {
-                                    stream.stop();
-                                    stream = null;
-                                }
                                 onBackPressed();
                             }
                         });
@@ -201,10 +187,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     protected void goToStreamView(){
 
         StreamListUtility.get_instance().clearAndDisconnect();
-        if(updateThread != null) {
-            updateThread.interrupt();
-            updateThread = null;
-        }
         streamList.mCallbacks = null;
 
         flipper.setDisplayedChild(0);
@@ -280,10 +262,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     protected void onDestroy() {
 
         StreamListUtility.get_instance().clearAndDisconnect();
-        if(updateThread != null) {
-            updateThread.interrupt();
-            updateThread = null;
-        }
 
         if(subStream != null){
             subStream.stop();

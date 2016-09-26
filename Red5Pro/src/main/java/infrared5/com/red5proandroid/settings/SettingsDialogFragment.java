@@ -497,7 +497,7 @@ public class SettingsDialogFragment extends Fragment {
             int newBitrate = Integer.parseInt( getField(advancedSubView, R.id.rateText).getText().toString() );
             String newResolution = getField(advancedSubView, R.id.resolutionText).getText().toString();
 
-            if(baseBitrate != newBitrate || Publish.selected_item.equalsIgnoreCase(newResolution) ) {
+            if(baseBitrate != newBitrate || !Publish.selected_item.equalsIgnoreCase(newResolution) ) {
 
                 if (newResolution.contains("x")) {
                     String[] bits = newResolution.split("x");
