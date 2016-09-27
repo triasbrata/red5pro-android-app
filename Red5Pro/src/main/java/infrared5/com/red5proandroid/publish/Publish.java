@@ -312,6 +312,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         camera.stopPreview();
 
+        this.surfaceForCamera.showDebugView(config.debug);
+
         isPublishing = true;
         stream.publish(Publish.config.name, R5Stream.RecordType.Live);
 
@@ -395,8 +397,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 //                    adaptiveBitrateController.requiresVideo = true;
             }
         }
-
-        this.surfaceForCamera.showDebugView(config.debug);
 
         camera.startPreview();
     }
