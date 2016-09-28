@@ -10,7 +10,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -38,7 +40,8 @@ import infrared5.com.red5proandroid.utilities.SubscribeList;
  */
 public class TwoWay extends Publish implements SubscribeList.Callbacks, SettingsDialogFragment.OnFragmentInteractionListener{
 
-    protected ViewFlipper flipper;
+//    protected ViewFlipper flipper;
+    protected DrawerLayout listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,27 +50,27 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         super.onCreate(savedInstanceState);
 
-        flipper = new ViewFlipper(this);
-        flipper.setAutoStart(false);
-        setContentView(flipper);
+//        flipper = new ViewFlipper(this);
+//        flipper.setAutoStart(false);
+//        setContentView(flipper);
 
 
         //two way
         View twView = View.inflate(this, R.layout.activity_two_way, null);
-        flipper.addView(twView);
-        //stream list
-        View listView = View.inflate(this, R.layout.stream_list, null);
-        flipper.addView(listView);
 
-        flipper.setDisplayedChild(0);
+        setContentView( twView );
+//        flipper.addView(twView);
+        //stream list
+//        View listView = View.inflate(this, R.layout.stream_list, null);
+//        flipper.addView(listView);
+//
+//        flipper.setDisplayedChild(0);
 
         camera = Camera.open(cameraSelection);
         Camera.getCameraInfo(cameraSelection, cameraInfo);
         setOrientationMod();
         camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
         sizes=camera.getParameters().getSupportedPreviewSizes();
-
-        surfaceForCamera = (R5VideoView) twView.findViewById(R.id.video);
 
         ImageButton rButton = (ImageButton) twView.findViewById(R.id.btnRecord);
         rButton.setImageResource(R.drawable.empty);
@@ -103,11 +106,14 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         onList = true;
 
+        listView = (DrawerLayout) View.inflate(this, R.layout.stream_list, null);
+        ((FrameLayout)findViewById(R.id.settings_frame)).addView(listView);
+
         configure();
         //publish while selecting stream
         startPublishing();
 
-        flipper.setDisplayedChild(1);
+//        flipper.setDisplayedChild(1);
 
         final TwoWay thisParent = this;
 
@@ -135,7 +141,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
                         streamList = (SubscribeList) getFragmentManager().findFragmentById(R.id.streamList);
                         streamList.mCallbacks = thisParent;
 
-                        final DrawerLayout drawer = (DrawerLayout) flipper.getCurrentView();
+                        final DrawerLayout drawer = listView;
 
                         findViewById(R.id.slideNavBtn).setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -189,7 +195,9 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         StreamListUtility.get_instance().clearAndDisconnect();
         streamList.mCallbacks = null;
 
-        flipper.setDisplayedChild(0);
+//        flipper.setDisplayedChild(0);
+
+        ((FrameLayout)findViewById(R.id.settings_frame)).removeAllViews();
 
         ControlBarFragment controlBar = (ControlBarFragment)getFragmentManager().findFragmentById(R.id.control_bar);
         controlBar.setSelection(AppState.PUBLISH);
@@ -207,8 +215,9 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         //create the subscriber and connect it
         subStream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));
-        ((R5VideoView) findViewById(R.id.subscribeView)).attachStream(subStream);
-//        subStream.setView();
+        R5VideoView subView = (R5VideoView) findViewById(R.id.subscribeView);
+        subView.attachStream(subStream);
+        subView.showDebugView(config.debug);
         subStream.play( subName );
     }
 

@@ -7,13 +7,12 @@
     tools:context="infrared5.com.red5proandroid.publish.Publish"
     style="@style/StandardView">
 
-    <com.red5pro.streaming.view.R5VideoView
-        android:id="@+id/publishView"
-        android:layout_centerHorizontal="true"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="100dp"
-        />
+        android:id="@+id/preview_container"
+        android:layout_marginBottom="100dp">
+    </FrameLayout>
 
     <!--<ProgressBar-->
         <!--style="?android:attr/progressBarStyleLarge"-->

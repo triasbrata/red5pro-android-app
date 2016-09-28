@@ -17,6 +17,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import com.red5pro.streaming.view.R5VideoView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Exchanger;
 
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.ControlBarFragment;
@@ -265,23 +267,23 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         cameraOrientation = degrees;
     }
 
-    protected void showCamera() {
-        if(camera == null) {
-            camera = Camera.open(cameraSelection);
-            camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
-            sizes=camera.getParameters().getSupportedPreviewSizes();
-
-            SurfaceView sufi = (SurfaceView) findViewById(R.id.publishView);
-
-            if(sufi.getHolder().isCreating()) {
-                sufi.getHolder().addCallback(this);
-            }
-            else {
-                sufi.getHolder().addCallback(this);
-                this.surfaceCreated(sufi.getHolder());
-            }
-        }
-    }
+//    protected void showCamera() {
+//        if(camera == null) {
+//            camera = Camera.open(cameraSelection);
+//            camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
+//            sizes=camera.getParameters().getSupportedPreviewSizes();
+//
+//            SurfaceView sufi = (SurfaceView) findViewById(R.id.publishView);
+//
+//            if(sufi.getHolder().isCreating()) {
+//                sufi.getHolder().addCallback(this);
+//            }
+//            else {
+//                sufi.getHolder().addCallback(this);
+//                this.surfaceCreated(sufi.getHolder());
+//            }
+//        }
+//    }
 
     private void stopCamera() {
         if(camera != null) {
@@ -312,7 +314,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         camera.stopPreview();
 
-        this.surfaceForCamera.showDebugView(config.debug);
+        configureStream();
+
+        surfaceForCamera.showDebugView(config.debug);
 
         isPublishing = true;
         stream.publish(Publish.config.name, R5Stream.RecordType.Live);
@@ -377,13 +381,22 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             }
         });
 
-        setCamera();
-
         r5Mic = new R5Microphone();
 
         if(config.video) {
+            setCamera();
+
             stream.attachCamera(r5Cam);
         }
+
+        //assign the surface to show the camera output
+        surfaceForCamera = new R5VideoView(this);
+        FrameLayout frame = ((FrameLayout)findViewById(R.id.preview_container));
+        frame.removeAllViews();
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        frame.addView(surfaceForCamera, params);
+
+        surfaceForCamera.attachStream(stream);
 
         if(config.audio) {
             stream.attachMic(r5Mic);
@@ -412,12 +425,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         }
 
         camera.stopPreview();
-
-        //assign the surface to show the camera output
-        if(this.surfaceForCamera == null)
-            this.surfaceForCamera = (R5VideoView) findViewById(R.id.publishView);
-        this.surfaceForCamera.attachStream(stream);
-//            stream.setView((SurfaceView) findViewById(R.id.surfaceView));
 
         //add the camera for streaming
         if(selected_item != null) {

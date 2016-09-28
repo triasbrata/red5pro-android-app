@@ -16,13 +16,13 @@
         android:scaleY="1"
         />
 
-    <com.red5pro.streaming.view.R5VideoView
+    <FrameLayout
         android:layout_width="150dp"
         android:layout_height="200dp"
         android:layout_above="@+id/control_bar"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/publishView" />
+        android:id="@+id/preview_container" />
 
     <fragment
         android:id="@+id/control_bar"
