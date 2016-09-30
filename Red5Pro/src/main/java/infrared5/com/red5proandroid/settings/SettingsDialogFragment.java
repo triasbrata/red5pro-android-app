@@ -339,6 +339,10 @@ public class SettingsDialogFragment extends Fragment {
                 saveSettings(v);
                 mListener.onSettingsDialogClose();
 
+                if(state == AppState.SUBSCRIBE){
+                    getActivity().getFragmentManager().beginTransaction().remove(streamList).commit();
+                }
+
                 getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
             }
         });
@@ -403,6 +407,10 @@ public class SettingsDialogFragment extends Fragment {
 
                 saveSettings(settingsSubView);
                 mListener.onSettingsDialogClose();
+
+                if(state == AppState.SUBSCRIBE){
+                    getActivity().getFragmentManager().beginTransaction().remove(streamList).commit();
+                }
 
                 getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
             }

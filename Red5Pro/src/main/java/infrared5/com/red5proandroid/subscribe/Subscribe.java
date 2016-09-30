@@ -125,7 +125,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         v.setKeepScreenOn(true);
 
         //setup the stream with the user config settings
-        stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, streamParams.host, streamParams.port, streamParams.app, 2.0f)));
+        stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, streamParams.host, streamParams.port, streamParams.app, 1.0f)));
 
         //set log level to be informative
         stream.setLogLevel(R5Stream.LOG_LEVEL_INFO);
@@ -153,10 +153,10 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
         //associate the video object with the red5 SDK video view
         R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
-        //set the debug view
-        videoView.showDebugView(streamParams.debug);
         //attach the stream
         videoView.attachStream(stream);
+        //set the debug view
+        videoView.showDebugView(streamParams.debug);
         //start the stream
         stream.play(streamParams.name);
         //update the state for the toggle button
@@ -165,7 +165,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
     }
 
     public void onClick(View view) {
-        ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
+//        ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
 
         if(isStreaming) {
 //            stopStream();
