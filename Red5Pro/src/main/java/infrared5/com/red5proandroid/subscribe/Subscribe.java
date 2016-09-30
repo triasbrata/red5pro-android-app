@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,8 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         this.finish();
     }
      public void onSettingsClick() {
-        openSettings();
+         stopStream();
+         openSettings();
     }
 
     public void onSettingsDialogClose() {
@@ -152,7 +154,10 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         });
 
         //associate the video object with the red5 SDK video view
-        R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
+        R5VideoView videoView = new R5VideoView(this);
+        FrameLayout frame = (FrameLayout) v.findViewById(R.id.video_container);
+        frame.removeAllViews();
+        frame.addView(videoView);
         //attach the stream
         videoView.attachStream(stream);
         //set the debug view
@@ -182,9 +187,9 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
     private void stopStream() {
 
         if(stream != null) {
-            View v = this.findViewById(android.R.id.content);
-            R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
-            videoView.attachStream(null);
+//            View v = this.findViewById(android.R.id.content);
+//            R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
+//            videoView.attachStream(null);
             stream.stop();
 
             stream = null;

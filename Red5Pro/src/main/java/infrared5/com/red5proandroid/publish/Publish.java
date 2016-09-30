@@ -76,6 +76,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     public void onSettingsClick() {
+        stopPublishing();
+        stopCamera();
         openSettings();
     }
 
@@ -94,6 +96,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     public void onSettingsDialogClose() {
         dialogFragment = null;
         configure();
+        configureStream(true);
     }
 
     //grab user data to be used in R5Configuration
@@ -142,8 +145,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
         cameraButton.setOnClickListener(this);
-
-        configureStream();
     }
 
     @Override
@@ -178,6 +179,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+
             openSettings();
             return true;
         }
@@ -304,7 +306,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 stream.stop();
             }
 
-            configureStream();
+//            configureStream(false);
 
             beginStream();
         }
@@ -312,9 +314,9 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
     protected void beginStream(){
 
-        camera.stopPreview();
+//        camera.stopPreview();
 
-        configureStream();
+        configureStream(false);
 
         surfaceForCamera.showDebugView(config.debug);
 
@@ -324,7 +326,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         camera.startPreview();
     }
 
-    protected void configureStream(){
+    protected void configureStream(boolean startPreview){
 
         Handler mHand = new Handler();
 
@@ -411,7 +413,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             }
         }
 
-        camera.startPreview();
+        if(startPreview)
+            camera.startPreview();
     }
 
     protected void setCamera(){
@@ -432,7 +435,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             String bits[] = selected_item.split("x");
             int pW= Integer.valueOf(bits[0]);
             int pH=  Integer.valueOf(bits[1]);
-            //I don't know why this code was added, looks like it overrides the default resolution selections?
 //                if((pW/2) %16 !=0){
 //                    pW=320;
 //                    pH=240;
@@ -448,10 +450,10 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 r5Cam.setCamera(camera);
         }
         else {
-            Camera.Parameters parameters = camera.getParameters();
-            parameters.setPreviewSize(320, 240);
-
-            camera.setParameters(parameters);
+//            Camera.Parameters parameters = camera.getParameters();
+//            parameters.setPreviewSize(320, 240);
+//
+//            camera.setParameters(parameters);
 
             if( r5Cam == null ) {
                 r5Cam = new R5Camera(camera, 320, 240);
@@ -466,14 +468,21 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
     protected void stopPublishing() {
         if(stream!=null && isPublishing) {
+            if(!override) {
+                ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
+                rButton.setImageResource(R.drawable.empty_red);
+            }
+
             stream.stop();
         }
         isPublishing = false;
+
+        r5Cam = null;
     }
 
     public void onClick(View view) {
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
-        ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
+//        ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
 
         if(view.getId() == R.id.btnRecord) {
             if(isPublishing) {

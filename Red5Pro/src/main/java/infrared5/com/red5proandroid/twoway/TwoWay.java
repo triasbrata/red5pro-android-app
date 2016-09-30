@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.ControlBarFragment;
 import infrared5.com.red5proandroid.R;
+import infrared5.com.red5proandroid.navigation.SlideNav;
 import infrared5.com.red5proandroid.publish.Publish;
 import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 import infrared5.com.red5proandroid.utilities.StreamListUtility;
@@ -79,6 +81,16 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     }
 
     @Override
+    public void onSettingsClick() {
+        if( subStream != null ){
+            subStream.stop();
+            subStream = null;
+        }
+
+        super.onSettingsClick();
+    }
+
+    @Override
     protected void openSettings() {
         super.openSettings();
 
@@ -87,7 +99,9 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
     @Override
     public void onSettingsDialogClose() {
-        super.onSettingsDialogClose();
+//        super.onSettingsDialogClose();
+        dialogFragment = null;
+        configure();
 
         goToStreamList();
 //        dialogFragment.onDetach();
@@ -130,7 +144,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
                     @Override
                     public void run() {
 
-                        final View v =findViewById(android.R.id.content);
+                        final View v = findViewById(android.R.id.content);
                         v.setKeepScreenOn(true);
 
                         TextView streamName = (TextView)findViewById(R.id.publishText);
@@ -192,8 +206,12 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
     protected void goToStreamView(){
 
+        onList = false;
+
         StreamListUtility.get_instance().clearAndDisconnect();
         streamList.mCallbacks = null;
+        getFragmentManager().beginTransaction().remove(streamList).commit();
+        getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.left_drawer)).commit();
 
 //        flipper.setDisplayedChild(0);
 
@@ -215,7 +233,10 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         //create the subscriber and connect it
         subStream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));
-        R5VideoView subView = (R5VideoView) findViewById(R.id.subscribeView);
+        R5VideoView subView = new R5VideoView(this);
+        FrameLayout frame = (FrameLayout)findViewById(R.id.subscribe_container);
+        frame.removeAllViews();
+        frame.addView(subView);
         subView.attachStream(subStream);
         subView.showDebugView(config.debug);
         subStream.play( subName );
@@ -257,6 +278,22 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
             toggleCamera();
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            stopPublishing();
+            if(subStream != null) {
+                subStream.stop();
+                subStream = null;
+            }
+
+            openSettings();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

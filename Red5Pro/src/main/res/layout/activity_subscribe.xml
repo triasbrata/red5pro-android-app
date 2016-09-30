@@ -5,13 +5,19 @@
     android:background="#fff"
     tools:context="infrared5.com.red5proandroid.subscribe.Subscribe">
 
-    <com.red5pro.streaming.view.R5VideoView
-        android:id="@+id/video"
+    <FrameLayout
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp"
-        />
+        android:id="@+id/video_container" />
+    <!--<com.red5pro.streaming.view.R5VideoView-->
+        <!--android:id="@+id/video"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginBottom="100dp"-->
+        <!--/>-->
 
     <fragment
         android:id="@+id/control_bar"
