@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,7 +33,6 @@ import com.red5pro.streaming.view.R5VideoView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Exchanger;
 
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.ControlBarFragment;
@@ -70,10 +68,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     protected R5Stream stream;
 
     public final static String TAG = "Preview";
-
-    public void onStateSelection(AppState state) {
-        this.finish();
-    }
 
     public void onSettingsClick() {
         stopPublishing();
@@ -138,7 +132,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         //activate the camera
         Camera.getCameraInfo(cameraSelection, cameraInfo);
         setOrientationMod();
-//        showCamera();
 
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
         rButton.setOnClickListener(this);
@@ -237,7 +230,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         setOrientationMod();
 
         stopCamera();
-//        showCamera();
         setCamera();
 
         camera.startPreview();
@@ -269,28 +261,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         cameraOrientation = degrees;
     }
 
-//    protected void showCamera() {
-//        if(camera == null) {
-//            camera = Camera.open(cameraSelection);
-//            camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
-//            sizes=camera.getParameters().getSupportedPreviewSizes();
-//
-//            SurfaceView sufi = (SurfaceView) findViewById(R.id.publishView);
-//
-//            if(sufi.getHolder().isCreating()) {
-//                sufi.getHolder().addCallback(this);
-//            }
-//            else {
-//                sufi.getHolder().addCallback(this);
-//                this.surfaceCreated(sufi.getHolder());
-//            }
-//        }
-//    }
-
     private void stopCamera() {
         if(camera != null) {
-//            SurfaceView sufi = (SurfaceView) findViewById(R.id.previewView);
-//            sufi.getHolder().removeCallback(this);
             sizes.clear();
 
             camera.stopPreview();
@@ -306,15 +278,11 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 stream.stop();
             }
 
-//            configureStream(false);
-
             beginStream();
         }
     }
 
     protected void beginStream(){
-
-//        camera.stopPreview();
 
         configureStream(false);
 
@@ -327,8 +295,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     protected void configureStream(boolean startPreview){
-
-        Handler mHand = new Handler();
 
         final R5Configuration configuration = new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 0.5f);
         stream = new R5Stream(new R5Connection(configuration));
@@ -435,13 +401,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             String bits[] = selected_item.split("x");
             int pW= Integer.valueOf(bits[0]);
             int pH=  Integer.valueOf(bits[1]);
-//                if((pW/2) %16 !=0){
-//                    pW=320;
-//                    pH=240;
-//                }
-//                Camera.Parameters parameters = camera.getParameters();
-//                parameters.setPreviewSize(pW, pH);
-//                camera.setParameters(parameters);
+
             if( r5Cam == null ) {
                 r5Cam = new R5Camera(camera, pW, pH);
                 r5Cam.setBitrate(Publish.config.bitrate);
@@ -450,10 +410,6 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
                 r5Cam.setCamera(camera);
         }
         else {
-//            Camera.Parameters parameters = camera.getParameters();
-//            parameters.setPreviewSize(320, 240);
-//
-//            camera.setParameters(parameters);
 
             if( r5Cam == null ) {
                 r5Cam = new R5Camera(camera, 320, 240);
@@ -482,19 +438,14 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
     public void onClick(View view) {
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
-//        ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
 
         if(view.getId() == R.id.btnRecord) {
             if(isPublishing) {
-//                stopPublishing();
-//                rButton.setImageResource(R.drawable.empty_red);
-//                cameraButton.setVisibility(View.VISIBLE);
                 onBackPressed();
             }
             else {
                 beginStream();
                 rButton.setImageResource(R.drawable.empty);
-//                cameraButton.setVisibility(View.GONE);
             }
         }
         else if(view.getId() == R.id.btnCamera) {

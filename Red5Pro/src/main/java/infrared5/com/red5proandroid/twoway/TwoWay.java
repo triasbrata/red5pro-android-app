@@ -1,37 +1,25 @@
 package infrared5.com.red5proandroid.twoway;
 
-import android.app.ActivityManager;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import com.red5pro.streaming.R5Connection;
 import com.red5pro.streaming.R5Stream;
 import com.red5pro.streaming.R5StreamProtocol;
 import com.red5pro.streaming.config.R5Configuration;
-import com.red5pro.streaming.source.R5Camera;
-import com.red5pro.streaming.source.R5Microphone;
 import com.red5pro.streaming.view.R5VideoView;
-
-import java.util.ArrayList;
 
 import infrared5.com.red5proandroid.AppState;
 import infrared5.com.red5proandroid.ControlBarFragment;
 import infrared5.com.red5proandroid.R;
-import infrared5.com.red5proandroid.navigation.SlideNav;
 import infrared5.com.red5proandroid.publish.Publish;
 import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 import infrared5.com.red5proandroid.utilities.StreamListUtility;
@@ -42,7 +30,6 @@ import infrared5.com.red5proandroid.utilities.SubscribeList;
  */
 public class TwoWay extends Publish implements SubscribeList.Callbacks, SettingsDialogFragment.OnFragmentInteractionListener{
 
-//    protected ViewFlipper flipper;
     protected DrawerLayout listView;
 
     @Override
@@ -52,21 +39,10 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         super.onCreate(savedInstanceState);
 
-//        flipper = new ViewFlipper(this);
-//        flipper.setAutoStart(false);
-//        setContentView(flipper);
-
-
         //two way
         View twView = View.inflate(this, R.layout.activity_two_way, null);
 
         setContentView( twView );
-//        flipper.addView(twView);
-        //stream list
-//        View listView = View.inflate(this, R.layout.stream_list, null);
-//        flipper.addView(listView);
-//
-//        flipper.setDisplayedChild(0);
 
         camera = Camera.open(cameraSelection);
         Camera.getCameraInfo(cameraSelection, cameraInfo);
@@ -91,20 +67,11 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
     }
 
     @Override
-    protected void openSettings() {
-        super.openSettings();
-
-//        dialogFragment.onAttach(this);
-    }
-
-    @Override
     public void onSettingsDialogClose() {
-//        super.onSettingsDialogClose();
         dialogFragment = null;
         configure();
 
         goToStreamList();
-//        dialogFragment.onDetach();
     }
 
     protected TextView streamNum;
@@ -127,8 +94,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         //publish while selecting stream
         startPublishing();
 
-//        flipper.setDisplayedChild(1);
-
         final TwoWay thisParent = this;
 
         //Delay all of these so that the publish call doesn't kill the runnables
@@ -138,7 +103,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
                 try{
                     Thread.sleep(500);
-                }catch (Exception e){}
+                }catch (Exception e){ e.printStackTrace(); }
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -213,8 +178,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         getFragmentManager().beginTransaction().remove(streamList).commit();
         getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.left_drawer)).commit();
 
-//        flipper.setDisplayedChild(0);
-
         ((FrameLayout)findViewById(R.id.settings_frame)).removeAllViews();
 
         ControlBarFragment controlBar = (ControlBarFragment)getFragmentManager().findFragmentById(R.id.control_bar);
@@ -226,10 +189,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
         cameraButton.setOnClickListener(this);
-
-        //connect the publisher to a view
-//        this.surfaceForCamera = (SurfaceView) findViewById(R.id.publishView);
-//        stream.setView((SurfaceView) findViewById(R.id.publishView));
 
         //create the subscriber and connect it
         subStream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));

@@ -1,7 +1,6 @@
 package infrared5.com.red5proandroid.subscribe;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,10 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.red5pro.streaming.R5Connection;
@@ -39,10 +36,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     public final static String TAG = "Subscribe";
 
-    public void onStateSelection(AppState state) {
-        this.finish();
-    }
-     public void onSettingsClick() {
+    public void onSettingsClick() {
          stopStream();
          openSettings();
     }
@@ -87,14 +81,6 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         ControlBarFragment controlBar = (ControlBarFragment)getFragmentManager().findFragmentById(R.id.control_bar);
         controlBar.setSelection(AppState.SUBSCRIBE);
         controlBar.displayPublishControls(false);
-//
-//        View playPauseButton = findViewById(R.id.btnSubscribePlayPause);
-//        playPauseButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggleStream();
-//            }
-//        });
 
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
         rButton.setOnClickListener(this);
@@ -102,21 +88,9 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         rButton.setImageResource(R.drawable.empty);
     }
 
-//    private void toggleStream() {
-//        if(isStreaming) {
-//            stopStream();
-//        }
-//        else {
-//            startStream();
-//        }
-//    }
-
     private void setStreaming(boolean ok) {
-//        ViewGroup playPauseButton = (ViewGroup) findViewById(R.id.btnSubscribePlayPause);
-//        TextView textView = (TextView) playPauseButton.getChildAt(0);
 
         isStreaming = ok;
-//        textView.setText(isStreaming ? "Stop Stream" : "Start Stream");
     }
 
     private void startStream() {
@@ -170,32 +144,21 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
     }
 
     public void onClick(View view) {
-//        ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
 
         if(isStreaming) {
-//            stopStream();
-//            rButton.setImageResource(R.drawable.empty_red);
             onBackPressed();
         }
-//        else {
-//            startStream();
-//            rButton.setImageResource(R.drawable.empty);
-//        }
 
     }
 
     private void stopStream() {
 
         if(stream != null) {
-//            View v = this.findViewById(android.R.id.content);
-//            R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
-//            videoView.attachStream(null);
             stream.stop();
 
             stream = null;
         }
         setStreaming(false);
-
     }
 
     private void openSettings() {
