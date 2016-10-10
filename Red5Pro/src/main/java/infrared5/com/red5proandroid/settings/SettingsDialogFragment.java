@@ -403,7 +403,7 @@ public class SettingsDialogFragment extends Fragment {
 
                 saveAdvancedSettings();
 
-                saveSettings(settingsSubView);
+//                saveSettings(settingsSubView);
                 mListener.onSettingsDialogClose();
 
                 if(state == AppState.SUBSCRIBE){
