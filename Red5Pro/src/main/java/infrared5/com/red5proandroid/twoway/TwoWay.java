@@ -44,12 +44,6 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         setContentView( twView );
 
-        camera = Camera.open(cameraSelection);
-        Camera.getCameraInfo(cameraSelection, cameraInfo);
-        setOrientationMod();
-        camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
-        sizes=camera.getParameters().getSupportedPreviewSizes();
-
         ImageButton rButton = (ImageButton) twView.findViewById(R.id.btnRecord);
         rButton.setImageResource(R.drawable.empty);
 

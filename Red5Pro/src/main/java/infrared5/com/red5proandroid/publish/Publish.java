@@ -42,7 +42,7 @@ import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 public class Publish extends Activity implements SurfaceHolder.Callback, View.OnClickListener,
         ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
 
-    protected int cameraSelection = 1;
+    protected int cameraSelection = Camera.CameraInfo.CAMERA_FACING_FRONT;
     protected int cameraOrientation = 0;
     protected Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
     protected List<Camera.Size> sizes = new ArrayList<Camera.Size>();
@@ -232,7 +232,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         stopCamera();
         setCamera();
 
-        camera.startPreview();
+        if(camera != null)
+            camera.startPreview();
     }
 
     protected void setOrientationMod(){
@@ -291,7 +292,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         isPublishing = true;
         stream.publish(Publish.config.name, R5Stream.RecordType.Live);
 
-        camera.startPreview();
+        if(camera != null)
+            camera.startPreview();
     }
 
     protected void configureStream(boolean startPreview){
@@ -354,7 +356,8 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         if(config.video) {
             setCamera();
 
-            stream.attachCamera(r5Cam);
+            if(camera != null)
+                stream.attachCamera(r5Cam);
         }
 
         //assign the surface to show the camera output
@@ -379,21 +382,28 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             }
         }
 
-        if(startPreview)
+        if(startPreview && camera != null)
             camera.startPreview();
     }
 
     protected void setCamera(){
 
         if(camera == null){
-            camera = Camera.open(cameraSelection);
+            try{
+                camera = Camera.open(cameraSelection);
+            }catch (Exception e){
+//                e.printStackTrace();
+                System.out.println("Cannot connect to camera - moving on without it");
+                return;
+            }
             Camera.getCameraInfo(cameraSelection, cameraInfo);
             setOrientationMod();
             camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
             sizes=camera.getParameters().getSupportedPreviewSizes();
         }
 
-        camera.stopPreview();
+        if(camera != null)
+            camera.stopPreview();
 
         //add the camera for streaming
         if(selected_item != null) {
