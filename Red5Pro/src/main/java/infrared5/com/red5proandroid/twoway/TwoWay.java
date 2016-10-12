@@ -183,8 +183,13 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
         rButton.setOnClickListener(this);
 
-        ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
-        cameraButton.setOnClickListener(this);
+        if( Camera.getNumberOfCameras() < 2 ){
+            findViewById(R.id.btnCamera).setVisibility(View.GONE);
+        }
+        else {
+            ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
+            cameraButton.setOnClickListener(this);
+        }
 
         //create the subscriber and connect it
         subStream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, Publish.config.host,  Publish.config.port, Publish.config.app, 1.0f)));
