@@ -410,14 +410,20 @@ public class SettingsDialogFragment extends Fragment {
 
                 saveAdvancedSettings();
 
-//                saveSettings(settingsSubView);
-                mListener.onSettingsDialogClose();
+                android.app.FragmentManager fragmentManager = getActivity().getFragmentManager();
 
                 if(state == AppState.SUBSCRIBE){
-                    getActivity().getFragmentManager().beginTransaction().remove(streamList).commit();
+                    fragmentManager.beginTransaction().remove(streamList).commit();
                 }
 
-                getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
+                Fragment navFrag = fragmentManager.findFragmentById(R.id.left_drawer);
+                if(navFrag != null)
+                    fragmentManager.beginTransaction().remove(navFrag).commit();
+
+                fragmentManager.beginTransaction().remove(thisFragment).commit();
+
+//                saveSettings(settingsSubView);
+                mListener.onSettingsDialogClose();
             }
         });
 

@@ -83,8 +83,7 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         onList = true;
 
-        listView = (DrawerLayout) View.inflate(this, R.layout.stream_list, null);
-        ((FrameLayout)findViewById(R.id.settings_frame)).addView(listView);
+        ((FrameLayout)findViewById(R.id.settings_frame)).addView(View.inflate(this, R.layout.blank, null));
 
         configure();
         //publish while selecting stream
@@ -98,7 +97,20 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
             public void run() {
 
                 try{
-                    Thread.sleep(500);
+                    Thread.sleep(50);
+                }catch (Exception e){ e.printStackTrace(); }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        listView = (DrawerLayout) View.inflate(thisParent, R.layout.stream_list, null);
+                        ((FrameLayout)findViewById(R.id.settings_frame)).addView(listView);
+                    }
+                });
+
+                try{
+                    Thread.sleep(450);
                 }catch (Exception e){ e.printStackTrace(); }
 
                 runOnUiThread(new Runnable() {
