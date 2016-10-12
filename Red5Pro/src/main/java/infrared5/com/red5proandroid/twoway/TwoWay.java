@@ -44,6 +44,8 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
 
         setContentView( twView );
 
+        setDefaultCamera();
+
         ImageButton rButton = (ImageButton) twView.findViewById(R.id.btnRecord);
         rButton.setImageResource(R.drawable.empty);
 

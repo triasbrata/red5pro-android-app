@@ -42,7 +42,7 @@ import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 public class Publish extends Activity implements SurfaceHolder.Callback, View.OnClickListener,
         ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
 
-    protected int cameraSelection = Camera.CameraInfo.CAMERA_FACING_FRONT;
+    protected int cameraSelection = -1;
     protected int cameraOrientation = 0;
     protected Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
     protected List<Camera.Size> sizes = new ArrayList<Camera.Size>();
@@ -125,9 +125,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         v.setKeepScreenOn(true);
 
-        ControlBarFragment controlBar = (ControlBarFragment)getFragmentManager().findFragmentById(R.id.control_bar);
-        controlBar.setSelection(AppState.PUBLISH);
-        controlBar.displayPublishControls(true);
+        setDefaultCamera();
 
         //activate the camera
         Camera.getCameraInfo(cameraSelection, cameraInfo);
@@ -138,6 +136,28 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         ImageButton cameraButton = (ImageButton) findViewById(R.id.btnCamera);
         cameraButton.setOnClickListener(this);
+    }
+
+    protected void setDefaultCamera(){
+        ControlBarFragment controlBar = (ControlBarFragment)getFragmentManager().findFragmentById(R.id.control_bar);
+        controlBar.setSelection(AppState.PUBLISH);
+        controlBar.displayPublishControls(true);
+
+        if( Camera.getNumberOfCameras() < 2 ){
+            findViewById(R.id.btnCamera).setVisibility(View.GONE);
+            cameraSelection = 0;
+        }
+        else {
+            Camera.CameraInfo tempInfo = new Camera.CameraInfo();
+            for( int i = 0; i < Camera.getNumberOfCameras(); i++ ){
+                Camera.getCameraInfo(i, tempInfo);
+                if(tempInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT){
+                    cameraSelection = i;
+                    break;
+                }
+            }
+            if(cameraSelection < 0) cameraSelection = 0;
+        }
     }
 
     @Override
@@ -218,7 +238,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
     }
 
     protected void toggleCamera() {
-        cameraSelection = (cameraSelection + 1) % 2;
+        cameraSelection = (cameraSelection + 1) % Camera.getNumberOfCameras();
         try {
             Camera.getCameraInfo(cameraSelection, cameraInfo);
             cameraSelection = cameraInfo.facing;
@@ -240,6 +260,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
 
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
         int degrees = 0;
+
         switch (rotation) {
             case Surface.ROTATION_0: degrees = 0; break;
             case Surface.ROTATION_180: degrees = 180; break;
@@ -398,7 +419,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
             }
             Camera.getCameraInfo(cameraSelection, cameraInfo);
             setOrientationMod();
-            camera.setDisplayOrientation((cameraOrientation + (cameraSelection == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
+            camera.setDisplayOrientation((cameraOrientation + (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT ? 180 : 0)) % 360);
             sizes=camera.getParameters().getSupportedPreviewSizes();
         }
 
