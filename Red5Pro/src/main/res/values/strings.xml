@@ -4,6 +4,7 @@
     <string name="app_name">Red5Pro</string>
     <string name="title_activity_preview">Red5Pro Publish Preview</string>
     <string name="title_activity_publish">Red5Pro Publish</string>
+    <string name="title_activity_twoway">Red5Pro Two Way</string>
     <string name="title_activity_second_screen">Red5Pro Second Screen</string>
     <string name="title_activity_subscribe">Red5Pro Subscribe</string>
     <string name="title_activity_settings">Red5Pro Settings</string>
@@ -26,22 +27,44 @@
     <string name="preference_bitrate">settings.stream.bitrate</string>
     <string name="preference_audio">settings.stream.audio</string>
     <string name="preference_video">settings.stream.video</string>
+    <string name="preference_adaptive_bitrate">settings.stream.adaptiveBitrate</string>
+    <string name="preference_debug">settings.stream.debug</string>
     <string name="preference_resolutionWidth">settings.stream.resolutionWidth</string>
     <string name="preference_resolutionHeight">settings.stream.resolutionHeight</string>
     <string name="preference_resolutionQuality">settings.stream.resolutionQuality</string>
 
+    <integer name="preference_default_port">8554</integer>
+    <integer name="preference_default_bitrate">1000</integer>
+    <integer name="preference_default_resolutionWidth">854</integer>
+    <integer name="preference_default_resolutionHeight">480</integer>
+    <integer name="preference_default_resolutionQuality">1</integer>
+
     <string name="preference_default_host">0.0.0.0</string>
-    <string name="preference_default_port">8554</string>
     <string name="preference_default_ss_port">8088</string>
     <string name="preference_default_app">live</string>
     <string name="preference_default_ss_app">secondscreen</string>
     <string name="preference_default_name">myStream</string>
-    <string name="preference_default_bitrate">1000</string>
-    <string name="preference_default_resolutionWidth">854</string>
-    <string name="preference_default_resolutionHeight">480</string>
-    <string name="preference_default_resolutionQuality">1</string>
 
-    <string name="help_title">Thanks for downloading the Red5 Pro App!</string>
+    <string name="preference_file">Red5_Pro_SharedPreferences</string>
+
+    <bool name="preference_default_audio">true</bool>
+    <bool name="preference_default_video">true</bool>
+    <bool name="preference_default_adaptive_bitrate">false</bool>
+    <bool name="preference_default_debug">false</bool>
+
+    <string name="help_title">THANK YOU\nfor downloading\nRed5 Pro\'s App!</string>
     <string name="help_message">Most likely you are a developer and know what you have downloaded. Here are a few things to know in case you are confused.</string>
+
+    <string-array name="dummy_subscribe_values">
+        <item>Test 1</item>
+        <item>Test 2</item>
+        <item>Test 3</item>
+        <item>Test 4</item>
+        <item>Test 5</item>
+        <item>Test 6</item>
+        <item>Test 7</item>
+        <item>Test 8</item>
+        <item>Test 9</item>
+    </string-array>
 
 </resources>

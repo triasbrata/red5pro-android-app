@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".Main"
-    android:background="#C8C8C8">
+    style="@style/StandardView">
 
     <ImageView
         android:id="@+id/imageView"
@@ -39,11 +39,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/relativeLayout"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true">
 
         <ImageButton
             android:id="@+id/btnPublish"
@@ -58,16 +58,14 @@
         <TextView
             android:text="PUBLISH"
             android:id="@+id/textView"
-            android:textColor="#ffe30a00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_below="@id/btnPublish"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="25dp"
-            android:textStyle="bold" />
+            style="@style/StandardButtonLink" />
 
         <ImageButton
             android:id="@+id/btnSubscribe"
@@ -85,14 +83,34 @@
             android:layout_height="wrap_content"
             android:text="SUBSCRIBE"
             android:id="@+id/textView2"
-            android:textColor="#ffe30a00"
             android:textAlignment="center"
-            android:layout_alignStart="@+id/btnSubscribe"
             android:layout_below="@id/btnSubscribe"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="25dp"
-            android:textStyle="bold" />
+            android:layout_centerHorizontal="true"
+            style="@style/StandardButtonLink" />
+
+        <ImageButton
+            android:id="@+id/btnTwoWay"
+            android:src="@drawable/twoway"
+            android:scaleType="centerInside"
+            android:contentDescription="toTwoWay"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 WAY"
+            android:id="@+id/textView3"
+            android:textAlignment="center"
+            android:layout_below="@id/btnTwoWay"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            style="@style/StandardButtonLink" />
 
     </RelativeLayout>
 

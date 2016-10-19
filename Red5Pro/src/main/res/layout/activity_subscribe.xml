@@ -5,30 +5,19 @@
     android:background="#fff"
     tools:context="infrared5.com.red5proandroid.subscribe.Subscribe">
 
-    <com.red5pro.streaming.view.R5VideoView
-        android:id="@+id/video"
+    <FrameLayout
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="148dp"
-        />
-
-    <RelativeLayout
-        android:id="@+id/btnSubscribePlayPause"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#ff0000"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="#fff"
-            android:textSize="24dp"
-            android:textStyle="bold"
-            android:text="Start Stream"/>
-    </RelativeLayout>
+        android:layout_marginBottom="100dp"
+        android:id="@+id/video_container" />
+    <!--<com.red5pro.streaming.view.R5VideoView-->
+        <!--android:id="@+id/video"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginBottom="100dp"-->
+        <!--/>-->
 
     <fragment
         android:id="@+id/control_bar"
@@ -38,5 +27,13 @@
         android:layout_alignParentBottom="true"
         android:name="infrared5.com.red5proandroid.ControlBarFragment"
         tools:layout="@layout/fragment_control_bar" />
+
+    <FrameLayout
+        android:id="@+id/settings_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"></FrameLayout>
 
 </RelativeLayout>

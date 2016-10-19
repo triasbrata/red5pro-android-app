@@ -1,0 +1,119 @@
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="4"
+        android:background="#c8c8c8"
+        android:id="@+id/content_frame"
+        tools:context=".settings.SettingsDialogFragment"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/slideNavBtn"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/menu"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="STREAM NAME"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/textView5" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:text="stream1"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/publishText"
+                android:background="#ffffff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONNECT TO"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/textView6" />
+
+            <fragment
+                android:name="infrared5.com.red5proandroid.utilities.SubscribeList"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:id="@+id/streamList"
+                android:layout_alignLeft="@+id/textView5"
+                android:layout_below="@+id/textView5"
+                tools:layout="@android:layout/list_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/StreamNum"
+                android:text="0 STREAMS"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="horizontal">
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="left|center_vertical"
+                    android:text="BACK"
+                    android:background="#00ffffff"
+                    android:textStyle="bold"
+                    android:textColor="#e31900"
+                    android:id="@+id/Back" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical|right"
+                    android:text="SUBSCRIBE"
+                    android:background="#00ffffff"
+                    android:textStyle="bold"
+                    android:textColor="#e31900"
+                    android:id="@+id/submit"
+                    android:enabled="true"
+                    android:clickable="true"
+                    android:contextClickable="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/left_drawer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:name="infrared5.com.red5proandroid.navigation.SlideNav"
+        tools:layout="@layout/fragment_slide_nav" />
+
+</android.support.v4.widget.DrawerLayout>

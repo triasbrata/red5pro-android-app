@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         applicationId "infrared5.com.red5proandroid"
-        minSdkVersion 15
-        targetSdkVersion 20
+        minSdkVersion 16
+        targetSdkVersion 24
         versionCode 1070
-        versionName "2.0.0 SDK 1.0.0"
+        versionName "v2.4.0 SDK 1.4.0"
     }
     buildTypes {
         release {
@@ -35,7 +35,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'lib', include: ['*.jar'])
-    compile project(':red5pro-secondscreen')
+
+
+//    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {
