@@ -2,8 +2,7 @@ package infrared5.com.red5proandroid;
 
 public enum AppState {
     PUBLISH(0),
-    SUBSCRIBE(1),
-    SECONDSCREEN(2);
+    SUBSCRIBE(1);
 
     final int value;
 

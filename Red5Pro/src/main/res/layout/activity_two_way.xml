@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="infrared5.com.red5proandroid.twoway.TwoWay"
+    style="@style/StandardView">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="false"
+        android:scaleX="1"
+        android:scaleY="1"
+        android:layout_marginBottom="100dp"
+        android:id="@+id/subscribe_container" />
+
+    <!--<com.red5pro.streaming.view.R5VideoView-->
+        <!--android:id="@+id/subscribeView"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:layout_centerInParent="false"-->
+        <!--android:scaleX="1"-->
+        <!--android:scaleY="1"-->
+        <!--android:layout_marginBottom="100dp" />-->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="false"
+        android:scaleX="1"
+        android:scaleY="1"
+        android:layout_marginBottom="100dp"
+        android:weightSum="5"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="2"
+            android:weightSum="5">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/preview_container"
+                android:layout_weight="2"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/control_bar"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="0dp"
+        android:layout_alignParentBottom="true"
+        android:name="infrared5.com.red5proandroid.ControlBarFragment"
+        tools:layout="@layout/fragment_control_bar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/settings_frame"></FrameLayout>
+
+</RelativeLayout>

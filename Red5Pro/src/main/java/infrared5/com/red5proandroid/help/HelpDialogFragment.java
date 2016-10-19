@@ -45,7 +45,7 @@ public class HelpDialogFragment extends DialogFragment {
             for(URLSpan url: urls) {
                 URLSpan span = new URLSpan(url.getURL());
                 style.setSpan(span, sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                style.setSpan(new ForegroundColorSpan(Color.rgb(226, 46, 0)), sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                style.setSpan(new ForegroundColorSpan(Color.rgb(227, 25, 0)), sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             textView.setText(style);
         }
@@ -62,9 +62,9 @@ public class HelpDialogFragment extends DialogFragment {
         TextView helpVersion = (TextView) v.findViewById(R.id.help_version);
 
         helpVersion.setText(BuildConfig.VERSION_NAME);
-        String str1 = "<strong>1.</strong> In order to use this app you will need a working installation of <a href=\"http://red5pro.com\" style=\"color:#E21800\">Red5 Pro Server</a>.";
-        String str2 = "<strong>2.</strong> You can use this app to stream live video from your device\'s camera, view another live stream, and/or connect to other Red5 Pro Second Screen applications for all kinds of experiences.";
-        String str3 = "<p><strong>3.</strong> All the code for this app is live and free to use on <a href=\"https://github.com/infrared5/red5pro-example-apps\"><font color=\"#E21800\">GitHub</font></a>, and an overview of how it’s put together is available on our <a href=\"http://red5pro.com/docs\" style=\"color:#E21800\">site</a>.</p>";
+        String str1 = "In order to use this app you will need a working installation of <a href=\"http://red5pro.com\">Red5 Pro Server</a>.";
+        String str2 = "You can use this app to stream live video from your device\'s camera and/or view another live stream for all kinds of experiences.";
+        String str3 = "All the code for this app is live and free to use on <a href=\"https://github.com/infrared5/red5pro-android-app\">GitHub</a>, and an overview of how it’s put together is available on our <a href=\"http://red5pro.com/docs\">site</a>.</p>";
         helpOne.setText(Html.fromHtml(str1));
         helpTwo.setText(Html.fromHtml(str2));
         helpThree.setText(Html.fromHtml(str3));

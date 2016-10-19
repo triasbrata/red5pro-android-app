@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#c8c8c8"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Stream Name"
+            android:id="@+id/textView4" />
+
+        <fragment
+            android:name="infrared5.com.red5proandroid.utilities.SubscribeList"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/streamList"
+            android:layout_alignLeft="@+id/textView5"
+            android:layout_below="@+id/textView5"
+            tools:layout="@android:layout/list_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="left">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/StreamNum"
+                android:text="0 STREAMS"
+                android:layout_marginBottom="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="right">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SUBSCRIBE"
+                android:background="#00ffffff"
+                android:textStyle="bold"
+                android:textColor="#e31900"
+                android:id="@+id/submit" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADVANCED"
+        android:elegantTextHeight="false"
+        android:background="#00ffffff"
+        android:paddingRight="10dp"
+        android:drawableLeft="@drawable/more"
+        android:id="@+id/advanced"/>
+
+</LinearLayout>

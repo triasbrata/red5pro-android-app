@@ -1,7 +1,6 @@
 package infrared5.com.red5proandroid.subscribe;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,8 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.red5pro.streaming.R5Connection;
@@ -27,37 +26,47 @@ import infrared5.com.red5proandroid.R;
 import infrared5.com.red5proandroid.publish.PublishStreamConfig;
 import infrared5.com.red5proandroid.settings.SettingsDialogFragment;
 
-public class Subscribe extends Activity implements ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener {
+public class Subscribe extends Activity implements ControlBarFragment.OnFragmentInteractionListener, SettingsDialogFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     PublishStreamConfig streamParams = new PublishStreamConfig();
     R5Stream stream;
+    SettingsDialogFragment settingsFragment;
 
     public boolean isStreaming = false;
 
     public final static String TAG = "Subscribe";
 
-    public void onStateSelection(AppState state) {
-        this.finish();
-    }
-     public void onSettingsClick() {
-        openSettings();
+    public void onSettingsClick() {
+         stopStream();
+         openSettings();
     }
 
     public void onSettingsDialogClose() {
         configure();
+        settingsFragment = null;
+        startStream();
     }
 
     public String getStringResource(int id) {
         return getResources().getString(id);
     }
 
+    public int getIntResource(int id) {
+        return getResources().getInteger(id);
+    }
+
+    public boolean getBoolResource(int id){
+        return getResources().getBoolean(id);
+    }
+
     //setup configuration
     private void configure() {
-        SharedPreferences preferences = getPreferences(MODE_MULTI_PROCESS);
+        SharedPreferences preferences = getSharedPreferences(getStringResource(R.string.preference_file), MODE_MULTI_PROCESS);
         streamParams.host = preferences.getString(getStringResource(R.string.preference_host), getStringResource(R.string.preference_default_host));
-        streamParams.port = preferences.getInt(getStringResource(R.string.preference_port), Integer.parseInt(getStringResource(R.string.preference_default_port)));
+        streamParams.port = preferences.getInt(getStringResource(R.string.preference_port), getIntResource(R.integer.preference_default_port));
         streamParams.app = preferences.getString(getStringResource(R.string.preference_app), getStringResource(R.string.preference_default_app));
         streamParams.name = preferences.getString(getStringResource(R.string.preference_name), getStringResource(R.string.preference_default_name));
+        streamParams.debug = preferences.getBoolean(getStringResource(R.string.preference_debug), getBoolResource(R.bool.preference_default_debug));
     }
 
     @Override
@@ -73,31 +82,15 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         controlBar.setSelection(AppState.SUBSCRIBE);
         controlBar.displayPublishControls(false);
 
-        View playPauseButton = findViewById(R.id.btnSubscribePlayPause);
-        playPauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleStream();
-            }
-        });
+        ImageButton rButton = (ImageButton) findViewById(R.id.btnRecord);
+        rButton.setOnClickListener(this);
 
-    }
-
-    private void toggleStream() {
-        if(isStreaming) {
-            stopStream();
-        }
-        else {
-            startStream();
-        }
+        rButton.setImageResource(R.drawable.empty);
     }
 
     private void setStreaming(boolean ok) {
-        ViewGroup playPauseButton = (ViewGroup) findViewById(R.id.btnSubscribePlayPause);
-        TextView textView = (TextView) playPauseButton.getChildAt(0);
 
         isStreaming = ok;
-        textView.setText(isStreaming ? "Stop Stream" : "Start Stream");
     }
 
     private void startStream() {
@@ -108,7 +101,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         v.setKeepScreenOn(true);
 
         //setup the stream with the user config settings
-        stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, streamParams.host, streamParams.port, streamParams.app, 2.0f)));
+        stream = new R5Stream(new R5Connection(new R5Configuration(R5StreamProtocol.RTSP, streamParams.host, streamParams.port, streamParams.app, 1.0f)));
 
         //set log level to be informative
         stream.setLogLevel(R5Stream.LOG_LEVEL_INFO);
@@ -135,9 +128,14 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         });
 
         //associate the video object with the red5 SDK video view
-        R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
+        R5VideoView videoView = new R5VideoView(this);
+        FrameLayout frame = (FrameLayout) v.findViewById(R.id.video_container);
+        frame.removeAllViews();
+        frame.addView(videoView);
         //attach the stream
         videoView.attachStream(stream);
+        //set the debug view
+        videoView.showDebugView(streamParams.debug);
         //start the stream
         stream.play(streamParams.name);
         //update the state for the toggle button
@@ -145,24 +143,29 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     }
 
+    public void onClick(View view) {
+
+        if(isStreaming) {
+            onBackPressed();
+        }
+
+    }
+
     private void stopStream() {
 
         if(stream != null) {
-            View v = this.findViewById(android.R.id.content);
-            R5VideoView videoView = (R5VideoView)v.findViewById(R.id.video);
-            videoView.attachStream(null);
             stream.stop();
 
             stream = null;
         }
         setStreaming(false);
-
     }
 
     private void openSettings() {
         try {
-            DialogFragment newFragment = SettingsDialogFragment.newInstance(AppState.SUBSCRIBE);
-            newFragment.show(getFragmentManager().beginTransaction(), "settings_dialog");
+            stopStream();
+            settingsFragment = SettingsDialogFragment.newInstance(AppState.SUBSCRIBE);
+            getFragmentManager().beginTransaction().add(R.id.settings_frame, settingsFragment).commit();
         }
         catch(Exception e) {
             Log.i(TAG, "Can't open settings: " + e.getMessage());
@@ -173,6 +176,14 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.subscribe, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(settingsFragment == null || !settingsFragment.advancedOpen)
+            super.onBackPressed();
+        else
+            settingsFragment.forceReturnFromAdvanced();
     }
 
     @Override
