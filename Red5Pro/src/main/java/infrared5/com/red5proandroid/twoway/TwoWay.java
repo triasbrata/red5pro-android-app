@@ -15,6 +15,8 @@ import com.red5pro.streaming.R5Connection;
 import com.red5pro.streaming.R5Stream;
 import com.red5pro.streaming.R5StreamProtocol;
 import com.red5pro.streaming.config.R5Configuration;
+import com.red5pro.streaming.event.R5ConnectionEvent;
+import com.red5pro.streaming.event.R5ConnectionListener;
 import com.red5pro.streaming.view.R5VideoView;
 
 import infrared5.com.red5proandroid.AppState;
@@ -211,8 +213,27 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
         frame.addView(subView);
         subView.attachStream(subStream);
         subView.showDebugView(config.debug);
+
+        subStream.setListener(new R5ConnectionListener() {
+            @Override
+            public void onConnectionEvent(R5ConnectionEvent r5event) {
+
+                final R5ConnectionEvent event = r5event;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if ((event == R5ConnectionEvent.CLOSE || event.message.toLowerCase().contains("unpublish")) && !closed){
+                            onBackPressed();
+                        }
+                    }
+                });
+            }
+        });
+
         subStream.play( subName );
     }
+
+    protected boolean closed = false;
 
     protected void UpdateStreamList(){
 
@@ -250,6 +271,12 @@ public class TwoWay extends Publish implements SubscribeList.Callbacks, Settings
             toggleCamera();
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        closed = true;
+        super.onBackPressed();
     }
 
     @Override

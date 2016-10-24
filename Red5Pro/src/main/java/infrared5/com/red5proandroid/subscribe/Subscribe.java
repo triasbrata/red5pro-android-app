@@ -93,6 +93,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         isStreaming = ok;
     }
 
+    protected boolean closed = false;
     private void startStream() {
 
         //grab the main view where our video object resides
@@ -122,6 +123,10 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+
+                        if ((event == R5ConnectionEvent.CLOSE || event.message.toLowerCase().contains("unpublish")) && !closed){
+                            onBackPressed();
+                        }
                     }
                 });
             }
@@ -180,6 +185,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
 
     @Override
     public void onBackPressed() {
+        closed = true;
         if(settingsFragment == null || !settingsFragment.advancedOpen)
             super.onBackPressed();
         else
