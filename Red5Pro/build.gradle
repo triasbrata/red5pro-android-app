@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1070
-        versionName "v2.4.0 SDK 1.4.0"
+        versionName "v2.5.0 SDK 2.0.0”
     }
     buildTypes {
         release {
