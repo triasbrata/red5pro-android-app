@@ -25,6 +25,7 @@ import infrared5.com.red5proandroid.R;
 import infrared5.com.red5proandroid.publish.Publish;
 import infrared5.com.red5proandroid.utilities.StreamListUtility;
 import infrared5.com.red5proandroid.utilities.SubscribeList;
+import infrared5.com.red5proandroid.utilities.ValidationUtillity;
 
 public class SettingsDialogFragment extends Fragment {
 
@@ -93,7 +94,7 @@ public class SettingsDialogFragment extends Fragment {
         return getResources().getString(id);
     }
 
-    private void saveSettings(View v) {
+    private boolean saveSettings(View v) {
         SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -105,62 +106,72 @@ public class SettingsDialogFragment extends Fragment {
 //            CheckBox cb = (CheckBox)v.findViewById(R.id.settings_audio);
 //            CheckBox cbv = (CheckBox)v.findViewById(R.id.settings_video);
 //            CheckBox cba = (CheckBox)v.findViewById(R.id.settings_adaptive_bitrate);
-            EditText name = getField(v, R.id.settings_streamname);
-            editor.putString(getPreferenceValue(R.string.preference_name), name.getText().toString());
+            String name = getField(v, R.id.settings_streamname).getText().toString().trim();
 
-            final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
-            final int checkedID = group.getCheckedRadioButtonId();
+            if(ValidationUtillity.ValidateName(name)) {
+                getField(v, R.id.settings_streamname).setTextColor(Color.BLACK);
 
-            int resolutionWidth = 854;
-            int resolutionHeight = 480;
-            int selectedQuality = 1;
-            bitRate = 1000;
+                editor.putString(getPreferenceValue(R.string.preference_name), name);
 
-            switch (checkedID) {
-                case R.id.settings_quality_low:
-                    bitRate = 400;
-                    resolutionWidth = 426;
-                    resolutionHeight = 240;
-                    selectedQuality = 0;
-                    break;
-                default:
-                case R.id.settings_quality_medium:
-                    break;
-                case R.id.settings_quality_high:
-                    bitRate = 4500;
-                    resolutionWidth = 1920;
-                    resolutionHeight = 1080;
-                    selectedQuality = 2;
-                    break;
-                case R.id.settings_quality_other:
-                    bitRate = Publish.config.bitrate;
-                    resolutionWidth = Integer.valueOf( Publish.selected_item.split("x")[0] );
-                    resolutionHeight = Integer.valueOf( Publish.selected_item.split("x")[1] );
-                    selectedQuality = 3;
-                    break;
-            }
+                final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
+                final int checkedID = group.getCheckedRadioButtonId();
 
-            Log.d("SettingsDialogFragment", "Saving bitRate " + bitRate);
-            Log.d("SettingsDialogFragment", "Saving preference_resolutionWidth " + resolutionWidth);
-            Log.d("SettingsDialogFragment", "Saving preference_resolutionHeight " + resolutionHeight);
-            Log.d("SettingsDialogFragment", "Saving preference_resolutionQuality " + selectedQuality);
+                int resolutionWidth = 854;
+                int resolutionHeight = 480;
+                int selectedQuality = 1;
+                bitRate = 1000;
 
-            Publish.preferedResolution = selectedQuality;
-            Publish.selected_item = resolutionWidth + "x" + resolutionHeight;
-            Publish.config.bitrate = bitRate;
+                switch (checkedID) {
+                    case R.id.settings_quality_low:
+                        bitRate = 400;
+                        resolutionWidth = 426;
+                        resolutionHeight = 240;
+                        selectedQuality = 0;
+                        break;
+                    default:
+                    case R.id.settings_quality_medium:
+                        break;
+                    case R.id.settings_quality_high:
+                        bitRate = 4500;
+                        resolutionWidth = 1920;
+                        resolutionHeight = 1080;
+                        selectedQuality = 2;
+                        break;
+                    case R.id.settings_quality_other:
+                        bitRate = Publish.config.bitrate;
+                        resolutionWidth = Integer.valueOf(Publish.selected_item.split("x")[0]);
+                        resolutionHeight = Integer.valueOf(Publish.selected_item.split("x")[1]);
+                        selectedQuality = 3;
+                        break;
+                }
 
-            Log.d("SettingsDialogFragment", "Publish.preferedResolution " + selectedQuality);
-            Log.d("SettingsDialogFragment", "Publish.selected_item " + resolutionWidth + "x" + resolutionHeight);
-            Log.d("SettingsDialogFragment", "Publish.config.bitrate " + bitRate);
+                Log.d("SettingsDialogFragment", "Saving bitRate " + bitRate);
+                Log.d("SettingsDialogFragment", "Saving preference_resolutionWidth " + resolutionWidth);
+                Log.d("SettingsDialogFragment", "Saving preference_resolutionHeight " + resolutionHeight);
+                Log.d("SettingsDialogFragment", "Saving preference_resolutionQuality " + selectedQuality);
 
-            editor.putInt(getPreferenceValue(R.string.preference_bitrate),bitRate);
-            editor.putInt(getPreferenceValue(R.string.preference_resolutionWidth), resolutionWidth);
-            editor.putInt(getPreferenceValue(R.string.preference_resolutionHeight), resolutionHeight);
-            editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), selectedQuality);
+                Publish.preferedResolution = selectedQuality;
+                Publish.selected_item = resolutionWidth + "x" + resolutionHeight;
+                Publish.config.bitrate = bitRate;
+
+                Log.d("SettingsDialogFragment", "Publish.preferedResolution " + selectedQuality);
+                Log.d("SettingsDialogFragment", "Publish.selected_item " + resolutionWidth + "x" + resolutionHeight);
+                Log.d("SettingsDialogFragment", "Publish.config.bitrate " + bitRate);
+
+                editor.putInt(getPreferenceValue(R.string.preference_bitrate), bitRate);
+                editor.putInt(getPreferenceValue(R.string.preference_resolutionWidth), resolutionWidth);
+                editor.putInt(getPreferenceValue(R.string.preference_resolutionHeight), resolutionHeight);
+                editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), selectedQuality);
 
 //            editor.putBoolean(getPreferenceValue(R.string.preference_audio), cb.isChecked());
 //            editor.putBoolean(getPreferenceValue(R.string.preference_video), cbv.isChecked());
 //            editor.putBoolean(getPreferenceValue(R.string.preference_adaptive_bitrate), cba.isChecked());
+            }
+            else{
+                //display an error
+                getField(v, R.id.settings_streamname).setTextColor(Color.RED);
+                return false;
+            }
         }
         else {
             if(subSelected != null)
@@ -168,6 +179,8 @@ public class SettingsDialogFragment extends Fragment {
         }
 
         editor.apply();
+
+        return true;
     }
 
     private void showUserSettings(View v) {
@@ -184,6 +197,7 @@ public class SettingsDialogFragment extends Fragment {
         switch (state) {
             case PUBLISH:
                 EditText name = getField(v, R.id.settings_streamname);
+                getField(v, R.id.settings_streamname).setTextColor(Color.BLACK);
                 name.setText(preferences.getString(getPreferenceValue(R.string.preference_name), getPreferenceValue(R.string.preference_default_name)));
 
                 RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
@@ -334,7 +348,8 @@ public class SettingsDialogFragment extends Fragment {
                 if( state == AppState.SUBSCRIBE && subSelected == null)
                     return;
 
-                saveSettings(v);
+                if( !saveSettings(v) )
+                    return;
 
                 android.app.FragmentManager fragmentManager = getActivity().getFragmentManager();
 
@@ -408,7 +423,8 @@ public class SettingsDialogFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                saveAdvancedSettings();
+                if(!saveAdvancedSettings())
+                    return;
 
                 android.app.FragmentManager fragmentManager = getActivity().getFragmentManager();
 
@@ -500,29 +516,87 @@ public class SettingsDialogFragment extends Fragment {
         SharedPreferences preferences = getActivity().getSharedPreferences(getPreferenceValue(R.string.preference_file), Activity.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
 
+        boolean errorless = true;
+
         //server
-        editor.putString(getPreferenceValue(R.string.preference_host), getField(advancedSubView, R.id.serverText).getText().toString());
+        String text = getField(advancedSubView, R.id.serverText).getText().toString().trim();
+        if(ValidationUtillity.ValidateIP(text).isEmpty()) {
+            editor.putString(getPreferenceValue(R.string.preference_host), text);
+            getField(advancedSubView, R.id.serverText).setTextColor(Color.BLACK);
+        }
+        else{
+            //error
+            getField(advancedSubView, R.id.serverText).setTextColor(Color.RED);
+            errorless = false;
+        }
         //port
-        editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(getField(advancedSubView, R.id.portText).getText().toString()));
+        text = getField(advancedSubView, R.id.portText).getText().toString();
+        if(ValidationUtillity.ValidatePort(text)) {
+            editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(text));
+            getField(advancedSubView, R.id.portText).setTextColor(Color.BLACK);
+        }
+        else {
+            //error
+            getField(advancedSubView, R.id.portText).setTextColor(Color.RED);
+            errorless = false;
+        }
         //app
-        editor.putString(getPreferenceValue(R.string.preference_app), getField(advancedSubView, R.id.appText).getText().toString());
+        text = getField(advancedSubView, R.id.appText).getText().toString().trim();
+        if(ValidationUtillity.ValidateName(text)) {
+            editor.putString(getPreferenceValue(R.string.preference_app), text);
+            getField(advancedSubView, R.id.appText).setTextColor(Color.BLACK);
+        }
+        else{
+            //error
+            getField(advancedSubView, R.id.appText).setTextColor(Color.RED);
+            errorless = false;
+        }
         //name
-        editor.putString(getPreferenceValue(R.string.preference_name), getField(advancedSubView, R.id.nameText).getText().toString());
+        text = getField(advancedSubView, R.id.nameText).getText().toString().trim();
+        if(ValidationUtillity.ValidateName(text)) {
+            editor.putString(getPreferenceValue(R.string.preference_name), text);
+            getField(advancedSubView, R.id.nameText).setTextColor(Color.BLACK);
+        }
+        else {
+            //error
+            getField(advancedSubView, R.id.nameText).setTextColor(Color.RED);
+            errorless = false;
+        }
 
         if( state == AppState.PUBLISH ) {
 
+            if( !preferences.getBoolean(getPreferenceValue(R.string.preference_audio), getResources().getBoolean(R.bool.preference_default_audio))
+                    && !preferences.getBoolean(getPreferenceValue(R.string.preference_video), getResources().getBoolean(R.bool.preference_default_video)) ) {
+                errorless = false;
+                getField(advancedSubView, R.id.av_error).setVisibility(View.VISIBLE);
+            }
+            else {
+                getField(advancedSubView, R.id.av_error).setVisibility(View.GONE);
+            }
+
             //bitrate/resolution
             int baseBitrate = preferences.getInt(getPreferenceValue(R.string.preference_bitrate), getResources().getInteger(R.integer.preference_default_bitrate));
-            int newBitrate = Integer.parseInt( getField(advancedSubView, R.id.rateText).getText().toString() );
-            String newResolution = getField(advancedSubView, R.id.resolutionText).getText().toString();
+            int newBitrate = 0;
+            try {
+                newBitrate = Integer.parseInt(getField(advancedSubView, R.id.rateText).getText().toString().trim());
+                if( newBitrate <= 0 ) throw new Exception("Bitrate must be a positive integer");
+                getField(advancedSubView, R.id.rateText).setTextColor(Color.BLACK);
+            }catch (Exception e){
+                e.printStackTrace();
+                getField(advancedSubView, R.id.rateText).setTextColor(Color.RED);
+
+                editor.apply();
+                return false;
+            }
+            String newResolution = getField(advancedSubView, R.id.resolutionText).getText().toString().trim();
 
             if(baseBitrate != newBitrate || !Publish.selected_item.equalsIgnoreCase(newResolution) ) {
 
-                if (newResolution.contains("x")) {
+                if (newResolution.contains("x") && !newResolution.contains("-")) {
                     String[] bits = newResolution.split("x");
                     try {
-                        Integer.parseInt(bits[0]);
-                        Integer.parseInt(bits[1]);
+                        if(Integer.parseInt(bits[0]) <= 0) throw new Exception("Resolution values must be greater than 0");
+                        if(Integer.parseInt(bits[1]) <= 0) throw new Exception("Resolution values must be greater than 0");
                     } catch (Exception e) {
                         e.printStackTrace();
                         getField(advancedSubView, R.id.resolutionText).setTextColor(Color.RED);
@@ -550,7 +624,7 @@ public class SettingsDialogFragment extends Fragment {
 
         editor.apply();
 
-        return true;
+        return errorless;
     }
 
     @Override

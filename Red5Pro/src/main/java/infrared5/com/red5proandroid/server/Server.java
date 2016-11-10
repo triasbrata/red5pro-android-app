@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import infrared5.com.red5proandroid.Main;
 import infrared5.com.red5proandroid.R;
 import infrared5.com.red5proandroid.help.HelpDialogFragment;
+import infrared5.com.red5proandroid.utilities.ValidationUtillity;
 
 /**
  * Created by kylekellogg on 4/21/16.
@@ -86,7 +88,17 @@ public class Server extends Activity {
         final String server = serverText.getText().toString().trim();
         final String port = portText.getText().toString().trim();
 
-        if ((server.length() > 0 && !server.equals("0.0.0.0")) && port.length() > 0) {
+        boolean serverValid = server.length() > 0 && !server.equalsIgnoreCase("0.0.0.0");
+
+        String errorString = serverValid ? ValidationUtillity.ValidateIP(server) : "Please enter a sever IP";
+
+        serverValid = errorString.isEmpty();
+
+        errorText.setText( errorString );
+
+        boolean portValid = ValidationUtillity.ValidatePort(port);
+
+        if (serverValid && portValid) {
             SharedPreferences preferences = getSharedPreferences(getPreferenceValue(R.string.preference_file), MODE_MULTI_PROCESS);
             SharedPreferences.Editor editor = preferences.edit();
 
@@ -96,38 +108,44 @@ public class Server extends Activity {
 
             editor.apply();
 
-
             startActivity(new Intent(this, Main.class));
         } else {
+            if(errorString.isEmpty())
+                errorText.setText("Port must be a number greater than 0");
+
+            errorText.clearAnimation();
+            errorText.setAlpha(1.0f);
             errorText.animate()
+                    .setStartDelay(3250)
                     .setDuration(250)
-                    .alpha(1.0f)
-                    .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            errorText.animate()
-                                    .setStartDelay(3000)
-                                    .setDuration(250)
-                                    .alpha(0.0f)
-                                    .start();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    })
+                    .alpha(0.0f)
                     .start();
+//                    .setListener(new Animator.AnimatorListener() {
+//                        @Override
+//                        public void onAnimationStart(Animator animation) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            errorText.animate()
+//                                    .setStartDelay(3000)
+//                                    .setDuration(250)
+//                                    .alpha(0.0f)
+//                                    .start();
+//                        }
+//
+//                        @Override
+//                        public void onAnimationCancel(Animator animation) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animator animation) {
+//
+//                        }
+//                    })
+//                    .start();
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="#c8c8c8">
 
@@ -228,6 +229,16 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="vertical">
+
+            <TextView
+                android:text="Stream must have audio and/or video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:textColor="@android:color/holo_red_light"
+                android:id="@+id/av_error"
+                android:visibility="gone" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
