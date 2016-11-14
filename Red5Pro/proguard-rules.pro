@@ -15,3 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepattributes InnerClasses
+-dontoptimize
+-dontwarn com.red5pro.streaming.**

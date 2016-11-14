@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1070
-        versionName "v2.5.0 SDK 2.0.0”
+        versionName "v2.5.0 SDK 2.0.0"
     }
     buildTypes {
         release {
@@ -19,6 +19,7 @@ android {
 
         staging {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
                 appendVersionNameVersionCode(variant, defaultConfig)
             }
