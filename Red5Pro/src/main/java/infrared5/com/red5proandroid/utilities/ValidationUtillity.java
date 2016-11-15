@@ -1,10 +1,20 @@
 package infrared5.com.red5proandroid.utilities;
 
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.graphics.Color;
+import android.view.View;
+
+import java.util.Vector;
+
 /**
  * Created by davidHeimann on 11/8/16.
  */
 
 public class ValidationUtillity {
+
+    private static Vector<ObjectAnimator> animationSets;
 
     public static String ValidateIP(String ip){
 
@@ -55,11 +65,63 @@ public class ValidationUtillity {
 
     public static boolean ValidateName(String streamName){
 
+        if(streamName.isEmpty())
+            return false;
         for (char c:streamName.toCharArray()) {
             if(Character.isWhitespace(c))
                 return false;
         }
 
         return true;
+    }
+
+    public static void FlashRed(View view){
+
+        if(animationSets == null){
+            animationSets = new Vector<ObjectAnimator>();
+        }
+        else{
+            for (ObjectAnimator animation: animationSets) {
+                if(animation.getTarget() == view){
+                    animation.cancel();
+                }
+            }
+        }
+
+        view.setBackgroundColor(Color.argb(255, 225, 25, 0));
+
+        ObjectAnimator bgAnimate = ObjectAnimator.ofObject(view,"backgroundColor", new ArgbEvaluator(),0xFFE11900,0xFFFFFFFF );
+        bgAnimate.setStartDelay(500);
+        bgAnimate.setDuration(250);
+        bgAnimate.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                animationSets.remove(this);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                animationSets.remove(this);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        bgAnimate.start();
+    }
+
+    public static void CancelFlashes(){
+        if(animationSets != null && animationSets.size() > 0){
+            for (ObjectAnimator animation: animationSets) {
+                animation.cancel();
+            }
+        }
     }
 }

@@ -509,7 +509,7 @@ public class Publish extends Activity implements SurfaceHolder.Callback, View.On
         if(dialogFragment == null || !dialogFragment.advancedOpen)
             super.onBackPressed();
         else
-            dialogFragment.forceReturnFromAdvanced();
+            dialogFragment.returnFromAdvanced();
     }
 
 }

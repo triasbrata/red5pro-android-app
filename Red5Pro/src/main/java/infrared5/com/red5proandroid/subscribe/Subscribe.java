@@ -189,7 +189,7 @@ public class Subscribe extends Activity implements ControlBarFragment.OnFragment
         if(settingsFragment == null || !settingsFragment.advancedOpen)
             super.onBackPressed();
         else
-            settingsFragment.forceReturnFromAdvanced();
+            settingsFragment.returnFromAdvanced();
     }
 
     @Override

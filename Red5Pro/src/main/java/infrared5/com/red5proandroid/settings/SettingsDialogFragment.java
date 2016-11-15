@@ -113,8 +113,6 @@ public class SettingsDialogFragment extends Fragment {
             String name = getField(v, R.id.settings_streamname).getText().toString().trim();
 
             if(ValidationUtillity.ValidateName(name)) {
-                getField(v, R.id.settings_streamname).setTextColor(Color.BLACK);
-
                 editor.putString(getPreferenceValue(R.string.preference_name), name);
 
                 final RadioGroup group = (RadioGroup) v.findViewById(R.id.settings_quality);
@@ -173,7 +171,7 @@ public class SettingsDialogFragment extends Fragment {
             }
             else{
                 //display an error
-                getField(v, R.id.settings_streamname).setTextColor(Color.RED);
+                ValidationUtillity.FlashRed( getField(v, R.id.settings_streamname) );
                 return false;
             }
         }
@@ -482,24 +480,6 @@ public class SettingsDialogFragment extends Fragment {
     }
 
     public void returnFromAdvanced(){
-        if(!saveAdvancedSettings())
-            return;
-
-        advancedOpen = false;
-
-        if(state == AppState.PUBLISH)
-            showUserSettings(settingsSubView);
-        else{
-            subSelected = getField(advancedSubView, R.id.nameText).getText().toString();
-            UpdateStreamList();
-        }
-
-        LinearLayout parent = (LinearLayout)advancedSubView.getParent();
-        parent.removeView(advancedSubView);
-        parent.addView(settingsSubView);
-    }
-
-    public void forceReturnFromAdvanced(){
         saveAdvancedSettings();
 
         advancedOpen = false;
@@ -526,44 +506,40 @@ public class SettingsDialogFragment extends Fragment {
         String text = getField(advancedSubView, R.id.serverText).getText().toString().trim();
         if(ValidationUtillity.ValidateIP(text).isEmpty()) {
             editor.putString(getPreferenceValue(R.string.preference_host), text);
-            getField(advancedSubView, R.id.serverText).setTextColor(Color.BLACK);
         }
         else{
             //error
-            getField(advancedSubView, R.id.serverText).setTextColor(Color.RED);
+            ValidationUtillity.FlashRed( getField(advancedSubView, R.id.serverText) );
             errorless = false;
         }
         //port
         text = getField(advancedSubView, R.id.portText).getText().toString();
         if(ValidationUtillity.ValidatePort(text)) {
             editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(text));
-            getField(advancedSubView, R.id.portText).setTextColor(Color.BLACK);
         }
         else {
             //error
-            getField(advancedSubView, R.id.portText).setTextColor(Color.RED);
+            ValidationUtillity.FlashRed( getField(advancedSubView, R.id.portText) );
             errorless = false;
         }
         //app
         text = getField(advancedSubView, R.id.appText).getText().toString().trim();
         if(ValidationUtillity.ValidateName(text)) {
             editor.putString(getPreferenceValue(R.string.preference_app), text);
-            getField(advancedSubView, R.id.appText).setTextColor(Color.BLACK);
         }
         else{
             //error
-            getField(advancedSubView, R.id.appText).setTextColor(Color.RED);
+            ValidationUtillity.FlashRed( getField(advancedSubView, R.id.appText) );
             errorless = false;
         }
         //name
         text = getField(advancedSubView, R.id.nameText).getText().toString().trim();
         if(ValidationUtillity.ValidateName(text)) {
             editor.putString(getPreferenceValue(R.string.preference_name), text);
-            getField(advancedSubView, R.id.nameText).setTextColor(Color.BLACK);
         }
         else {
             //error
-            getField(advancedSubView, R.id.nameText).setTextColor(Color.RED);
+            ValidationUtillity.FlashRed( getField(advancedSubView, R.id.nameText) );
             errorless = false;
         }
 
@@ -584,10 +560,9 @@ public class SettingsDialogFragment extends Fragment {
             try {
                 newBitrate = Integer.parseInt(getField(advancedSubView, R.id.rateText).getText().toString().trim());
                 if( newBitrate <= 0 ) throw new Exception("Bitrate must be a positive integer");
-                getField(advancedSubView, R.id.rateText).setTextColor(Color.BLACK);
             }catch (Exception e){
                 e.printStackTrace();
-                getField(advancedSubView, R.id.rateText).setTextColor(Color.RED);
+                ValidationUtillity.FlashRed( getField(advancedSubView, R.id.rateText) );
 
                 editor.apply();
                 return false;
@@ -603,15 +578,14 @@ public class SettingsDialogFragment extends Fragment {
                         if(Integer.parseInt(bits[1]) <= 0) throw new Exception("Resolution values must be greater than 0");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        getField(advancedSubView, R.id.resolutionText).setTextColor(Color.RED);
+                        ValidationUtillity.FlashRed( getField(advancedSubView, R.id.resolutionText) );
 
                         editor.apply();
 
                         return false;
                     }
-                    getField(advancedSubView, R.id.resolutionText).setTextColor(Color.BLACK);
                 } else {
-                    getField(advancedSubView, R.id.resolutionText).setTextColor(Color.RED);
+                    ValidationUtillity.FlashRed( getField(advancedSubView, R.id.resolutionText) );
 
                     editor.apply();
 
@@ -660,6 +634,8 @@ public class SettingsDialogFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        ValidationUtillity.CancelFlashes();
 
         StreamListUtility.get_instance().clearAndDisconnect();
 

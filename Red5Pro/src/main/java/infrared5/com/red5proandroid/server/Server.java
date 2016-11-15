@@ -116,7 +116,7 @@ public class Server extends Activity {
             errorText.clearAnimation();
             errorText.setAlpha(1.0f);
             errorText.animate()
-                    .setStartDelay(3250)
+                    .setStartDelay(3000)
                     .setDuration(250)
                     .alpha(0.0f)
                     .start();
