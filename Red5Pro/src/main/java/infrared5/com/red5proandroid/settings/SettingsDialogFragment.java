@@ -90,6 +90,10 @@ public class SettingsDialogFragment extends Fragment {
         return (EditText) v.findViewById(id);
     }
 
+    private TextView getTextField(View v, int id) {
+        return (TextView) v.findViewById(id);
+    }
+
     private String getPreferenceValue(int id) {
         return getResources().getString(id);
     }
@@ -568,10 +572,10 @@ public class SettingsDialogFragment extends Fragment {
             if( !preferences.getBoolean(getPreferenceValue(R.string.preference_audio), getResources().getBoolean(R.bool.preference_default_audio))
                     && !preferences.getBoolean(getPreferenceValue(R.string.preference_video), getResources().getBoolean(R.bool.preference_default_video)) ) {
                 errorless = false;
-                getField(advancedSubView, R.id.av_error).setVisibility(View.VISIBLE);
+                getTextField(advancedSubView, R.id.av_error).setVisibility(View.VISIBLE);
             }
             else {
-                getField(advancedSubView, R.id.av_error).setVisibility(View.GONE);
+                getTextField(advancedSubView, R.id.av_error).setVisibility(View.GONE);
             }
 
             //bitrate/resolution
