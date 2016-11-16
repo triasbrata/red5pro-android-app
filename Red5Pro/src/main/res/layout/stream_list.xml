@@ -103,8 +103,7 @@
                     android:textColor="#e31900"
                     android:id="@+id/submit"
                     android:enabled="true"
-                    android:clickable="true"
-                    android:contextClickable="false" />
+                    android:clickable="true" />
         </LinearLayout>
     </LinearLayout>
 
