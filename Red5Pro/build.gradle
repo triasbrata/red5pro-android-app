@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 20
+    compileSdkVersion 24
     buildToolsVersion "19.1.0"
 
     defaultConfig {
@@ -36,7 +36,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'lib', include: ['*.jar'])
-
 
 //    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }
