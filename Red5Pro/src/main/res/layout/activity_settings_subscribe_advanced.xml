@@ -17,7 +17,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SERVER"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:id="@+id/serverlabel" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -38,7 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PORT"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:id="@+id/portlabel" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -59,7 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="APP NAME"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:id="@+id/applabel" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -80,7 +83,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="STREAM NAME"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:id="@+id/streamlabel" />
 
             <EditText
                 android:layout_width="match_parent"

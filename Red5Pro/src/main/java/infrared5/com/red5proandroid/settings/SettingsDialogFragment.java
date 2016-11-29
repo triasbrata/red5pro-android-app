@@ -506,40 +506,48 @@ public class SettingsDialogFragment extends Fragment {
         String text = getField(advancedSubView, R.id.serverText).getText().toString().trim();
         if(ValidationUtillity.ValidateIP(text).isEmpty()) {
             editor.putString(getPreferenceValue(R.string.preference_host), text);
+            getTextField(advancedSubView, R.id.serverlabel).setTextColor(Color.BLACK);
         }
         else{
             //error
             ValidationUtillity.FlashRed( getField(advancedSubView, R.id.serverText) );
+            getTextField(advancedSubView, R.id.serverlabel).setTextColor(Color.RED);
             errorless = false;
         }
         //port
         text = getField(advancedSubView, R.id.portText).getText().toString();
         if(ValidationUtillity.ValidatePort(text)) {
             editor.putInt(getPreferenceValue(R.string.preference_port), Integer.parseInt(text));
+            getTextField(advancedSubView, R.id.portlabel).setTextColor(Color.BLACK);
         }
         else {
             //error
             ValidationUtillity.FlashRed( getField(advancedSubView, R.id.portText) );
+            getTextField(advancedSubView, R.id.portlabel).setTextColor(Color.RED);
             errorless = false;
         }
         //app
         text = getField(advancedSubView, R.id.appText).getText().toString().trim();
         if(ValidationUtillity.ValidateName(text)) {
             editor.putString(getPreferenceValue(R.string.preference_app), text);
+            getTextField(advancedSubView, R.id.applabel).setTextColor(Color.BLACK);
         }
         else{
             //error
             ValidationUtillity.FlashRed( getField(advancedSubView, R.id.appText) );
+            getTextField(advancedSubView, R.id.applabel).setTextColor(Color.RED);
             errorless = false;
         }
         //name
         text = getField(advancedSubView, R.id.nameText).getText().toString().trim();
         if(ValidationUtillity.ValidateName(text)) {
             editor.putString(getPreferenceValue(R.string.preference_name), text);
+            getTextField(advancedSubView, R.id.streamlabel).setTextColor(Color.BLACK);
         }
         else {
             //error
             ValidationUtillity.FlashRed( getField(advancedSubView, R.id.nameText) );
+            getTextField(advancedSubView, R.id.streamlabel).setTextColor(Color.RED);
             errorless = false;
         }
 
@@ -555,17 +563,19 @@ public class SettingsDialogFragment extends Fragment {
             }
 
             //bitrate/resolution
+            boolean bitResClean = true;
             int baseBitrate = preferences.getInt(getPreferenceValue(R.string.preference_bitrate), getResources().getInteger(R.integer.preference_default_bitrate));
             int newBitrate = 0;
             try {
                 newBitrate = Integer.parseInt(getField(advancedSubView, R.id.rateText).getText().toString().trim());
+                getTextField(advancedSubView, R.id.bitratelabel).setTextColor(Color.BLACK);
                 if( newBitrate <= 0 ) throw new Exception("Bitrate must be a positive integer");
             }catch (Exception e){
                 e.printStackTrace();
                 ValidationUtillity.FlashRed( getField(advancedSubView, R.id.rateText) );
+                getTextField(advancedSubView, R.id.bitratelabel).setTextColor(Color.RED);
 
-                editor.apply();
-                return false;
+                errorless = bitResClean = false;
             }
             String newResolution = getField(advancedSubView, R.id.resolutionText).getText().toString().trim();
 
@@ -574,29 +584,34 @@ public class SettingsDialogFragment extends Fragment {
                 if (newResolution.contains("x") && !newResolution.contains("-")) {
                     String[] bits = newResolution.split("x");
                     try {
-                        if(Integer.parseInt(bits[0]) <= 0) throw new Exception("Resolution values must be greater than 0");
-                        if(Integer.parseInt(bits[1]) <= 0) throw new Exception("Resolution values must be greater than 0");
+                        if (Integer.parseInt(bits[0]) <= 0)
+                            throw new Exception("Resolution values must be greater than 0");
+                        if (Integer.parseInt(bits[1]) <= 0)
+                            throw new Exception("Resolution values must be greater than 0");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        ValidationUtillity.FlashRed( getField(advancedSubView, R.id.resolutionText) );
+                        ValidationUtillity.FlashRed(getField(advancedSubView, R.id.resolutionText));
+                        getTextField(advancedSubView, R.id.resolutionlabel).setTextColor(Color.RED);
 
-                        editor.apply();
-
-                        return false;
+                        errorless = bitResClean  = false;
                     }
                 } else {
-                    ValidationUtillity.FlashRed( getField(advancedSubView, R.id.resolutionText) );
+                    ValidationUtillity.FlashRed(getField(advancedSubView, R.id.resolutionText));
+                    getTextField(advancedSubView, R.id.resolutionlabel).setTextColor(Color.RED);
 
-                    editor.apply();
-
-                    return false;
+                    errorless = bitResClean  = false;
                 }
-                editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), 3);
-                editor.putInt(getPreferenceValue(R.string.preference_bitrate), newBitrate);
-                editor.putInt(getPreferenceValue(R.string.preference_resolutionWidth), Integer.parseInt(newResolution.split("x")[0]));
-                editor.putInt(getPreferenceValue(R.string.preference_resolutionHeight), Integer.parseInt(newResolution.split("x")[1]));
 
-                Publish.selected_item = newResolution;
+                if (!bitResClean){
+                    getTextField(advancedSubView, R.id.resolutionlabel).setTextColor(Color.BLACK);
+
+                    editor.putInt(getPreferenceValue(R.string.preference_resolutionQuality), 3);
+                    editor.putInt(getPreferenceValue(R.string.preference_bitrate), newBitrate);
+                    editor.putInt(getPreferenceValue(R.string.preference_resolutionWidth), Integer.parseInt(newResolution.split("x")[0]));
+                    editor.putInt(getPreferenceValue(R.string.preference_resolutionHeight), Integer.parseInt(newResolution.split("x")[1]));
+
+                    Publish.selected_item = newResolution;
+                }
             }
         }
 
